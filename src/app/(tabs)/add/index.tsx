@@ -1,14 +1,18 @@
 import WebsiteInput from "@/components/add/website-input";
-import Button from "@/components/general/button";
+import ButtonWrapper from "@/components/general/button-wrapper";
 import { MainStyle } from "@/constants/screen_styles";
+import Feather from "@expo/vector-icons/Feather";
 import { useRouter } from "expo-router";
 import { StyleSheet, Text, View } from "react-native";
+
+const BUTTON_WIDTH = 175;
+const BUTTON_FONT_SIZE = 20;
 
 export default function AddScreen() {
 
   const router = useRouter();
 
-  var buttonWidth = 175;
+
 
   const linkRecipe = () => {
     router.navigate("/add/details");
@@ -23,10 +27,16 @@ export default function AddScreen() {
       <Text style={style.title}>The Recipe Records</Text>
       <Text style={style.subtitle}>Submit a link</Text>
       <WebsiteInput/>
-      <Button label={"Go!"} width={buttonWidth} iconNameFeather="send" onPress={linkRecipe}/>
+      <ButtonWrapper width={BUTTON_WIDTH} onPress={linkRecipe}>
+        <Feather name={"send"} size={20}/>
+        <Text style={{fontSize: BUTTON_FONT_SIZE}}>Go!</Text>
+      </ButtonWrapper>
       <Text style={style.title}>OR</Text>
       <Text style={style.subtitle}>Write a recipe</Text>
-      <Button label={"New Recipe"} width={buttonWidth} iconNameFeather="pen-tool" onPress={writeRecipe}/>
+      <ButtonWrapper width={BUTTON_WIDTH} onPress={writeRecipe}>
+        <Feather name={"pen-tool"} size={20}/>
+        <Text style={{fontSize: BUTTON_FONT_SIZE}}>New Recipe</Text>
+      </ButtonWrapper>
     </View>
   );
 }

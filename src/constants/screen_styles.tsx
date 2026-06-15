@@ -7,7 +7,7 @@ export const MainStyle = StyleSheet.create({
     justifyContent: "flex-start",
     flexDirection: "column",
     gap: 20,
-    margin: 30
+    marginTop: 30,
   },
   link: {
     fontSize: 20,

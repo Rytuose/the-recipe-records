@@ -10,7 +10,7 @@ export default function WebsiteInput(){
 
 export const style = StyleSheet.create({
   textInput:{
-    width: 400,
+    width: '50%',
     height: 50,
     borderRadius: 25,
     borderColor: "#000000",
