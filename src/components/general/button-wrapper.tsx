@@ -1,5 +1,5 @@
 import { PropsWithChildren } from 'react';
-import { DimensionValue, Pressable, StyleSheet, View } from "react-native";
+import { DimensionValue, Pressable, StyleSheet } from "react-native";
 
 type Props = PropsWithChildren<{
     width: DimensionValue
@@ -10,13 +10,11 @@ type Props = PropsWithChildren<{
 
 
 export default function ButtonWrapper({width, height, noBackground, children, onPress}: Props){
-  return <View>
-    <Pressable 
+  return <Pressable 
     style={[style.view, {width: width, height: height, borderWidth: noBackground?0:3}]}
     onPress={onPress}>
       {children}
     </Pressable>
-  </View>
 }
 
 export const style = StyleSheet.create({

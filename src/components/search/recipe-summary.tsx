@@ -19,11 +19,11 @@ export default function RecipeSummary(){
     const favoriteName = (favorite)? 'star': 'star-o';
     const favoriteColor = (favorite)? '#ffe234': '#000000';
 
-    var recipeClick = () => {
+    const recipeClick = () => {
         router.navigate("/search/details");
     }
 
-    var favoriteRecipe = () => {
+    const favoriteRecipe = () => {
         setFavorite(!favorite);
     }
 
@@ -79,7 +79,7 @@ export const style = StyleSheet.create({
     imagePlaceholder:{
         height: RECIPE_SUMMARY_HEIGHT - BORDER_WIDTH - 2*PADDING,
         width: RECIPE_SUMMARY_HEIGHT - BORDER_WIDTH - 2*PADDING,
-        backgroundColor: '#5d9450',
+        backgroundColor: '#123456',
         borderRadius: 7
 
     }

@@ -1,4 +1,4 @@
-import { MainStyle } from "@/constants/screen_styles";
+import { MainStyle } from "@/constants/styles";
 import { Link } from "expo-router";
 import { StyleSheet, Text, View } from "react-native";
 

@@ -8,9 +8,9 @@ export default function RecipeScrollView(){
 
     const {width} = useWindowDimensions();
     
-    var columnCount = Math.floor((width - 2*MARGIN + GAP)/(RECIPE_SUMMARY_WIDTH + GAP));
+    const columnCount = Math.floor((width - 2*MARGIN + GAP)/(RECIPE_SUMMARY_WIDTH + GAP));
 
-    var tempData = [1,2,3,4,5,6,7]
+    const tempData = [1,2,3,4,5,6,7]
 
     return  <FlatList
             key={columnCount}

@@ -9,6 +9,13 @@ export const MainStyle = StyleSheet.create({
     gap: 20,
     marginTop: 30,
   },
+  scrollContainer: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "flex-start",
+    flexDirection: "column",
+    gap: 20,
+  },
   link: {
     fontSize: 20,
     textDecorationLine: 'underline',
