@@ -5,20 +5,29 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 
 type Prop = {
     editable?: boolean
+    categoryAdd?: boolean
 }
 
-export default function Category({editable}: Prop){
+export default function Category({editable, categoryAdd}: Prop){
 
     // Might need to be async
     const deleteCategory = () => {
-        console.log("Deleting Category");
+        
+    }
+
+    const addCategory = () => {
+
     }
 
     return <View style={[style.view, {paddingRight: editable?5:10}]}>
-        <Text style={{paddingBottom: 1}}>Category Name</Text>
+        <Text style={{paddingBottom: 1}}>{(categoryAdd)?"Add Category":"Category Name"}</Text>
         {editable && 
         <Pressable style={{ width: 26, alignItems:'center'}} onPress={deleteCategory}>
             <Ionicons name="close" size={24}/>
+        </Pressable>}
+        {categoryAdd &&
+        <Pressable style={{ width: 26, alignItems:'center'}} onPress={addCategory}>
+            <Ionicons name="add" size={24}/>
         </Pressable>}
     </View>
 }

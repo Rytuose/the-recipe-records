@@ -3,13 +3,11 @@ import ButtonWrapper from "@/components/general/button-wrapper";
 import Category from "@/components/general/category";
 import SegmentedButton from "@/components/general/segmented-button";
 import RecipeStepBuilder from "@/components/search-details/recipe-step-builder";
-import { MainStyle } from "@/constants/styles";
+import { DETAIL_HORIZONTAL_MARGIN, MAIN_STYLE } from "@/constants/styles";
 import Feather from "@expo/vector-icons/Feather";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { Stack } from "expo-router";
 import { ScrollView, StyleSheet, Text, useWindowDimensions, View } from "react-native";
-
-const HORIZONTAL_MARGIN = 15;
 
 export default function DetailScreen() {
 
@@ -30,13 +28,13 @@ export default function DetailScreen() {
         headerTitleAlign:'center', 
         headerTitleStyle: style.title,
       }}/>
-      <View style={MainStyle.scrollContainer}>
+      <View style={MAIN_STYLE.scrollContainer}>
         <ScrollView 
         style = {{width: width}}
         contentContainerStyle={style.scrollView}>
           <Text style={style.text}>{"From: Website\nBy: Author"}</Text>
           <View style={[style.row,{flexWrap: 'wrap'}]}>
-            <Category editable={true}/>
+            <Category/>
             <Category/>
           </View>
           <ImageDisplay/>
@@ -50,7 +48,7 @@ export default function DetailScreen() {
               <Text style={style.buttonText}>Delete</Text>
             </ButtonWrapper>
           </View>
-          <View style={{marginHorizontal: HORIZONTAL_MARGIN}}>
+          <View style={{marginHorizontal: DETAIL_HORIZONTAL_MARGIN}}>
             <SegmentedButton options={["0.5x", "1x", "2x", "Custom"]}/>
           </View>
           <View style={style.section}>
@@ -75,7 +73,7 @@ export const style = StyleSheet.create({
     fontSize: 25
   },
   text:{
-    marginHorizontal: HORIZONTAL_MARGIN,
+    marginHorizontal: DETAIL_HORIZONTAL_MARGIN,
     fontSize: 15
   },
   scrollView:{
@@ -83,11 +81,11 @@ export const style = StyleSheet.create({
     gap: 15
   },
   section:{
-    marginHorizontal: HORIZONTAL_MARGIN,
+    marginHorizontal: DETAIL_HORIZONTAL_MARGIN,
     gap: 15
   },
   row:{
-    marginHorizontal: HORIZONTAL_MARGIN,
+    marginHorizontal: DETAIL_HORIZONTAL_MARGIN,
     flexDirection: 'row',
     gap: 10
   },

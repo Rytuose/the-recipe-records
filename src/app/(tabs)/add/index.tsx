@@ -1,6 +1,6 @@
 import WebsiteInput from "@/components/add/website-input";
 import ButtonWrapper from "@/components/general/button-wrapper";
-import { MainStyle } from "@/constants/styles";
+import { MAIN_STYLE } from "@/constants/styles";
 import Feather from "@expo/vector-icons/Feather";
 import { useRouter } from "expo-router";
 import { StyleSheet, Text, View } from "react-native";
@@ -23,7 +23,7 @@ export default function AddScreen() {
   }
 
   return (
-    <View style={MainStyle.container}>
+    <View style={MAIN_STYLE.container}>
       <Text style={style.title}>The Recipe Records</Text>
       <Text style={style.subtitle}>Submit a link</Text>
       <WebsiteInput/>

@@ -1,6 +1,8 @@
 import { StyleSheet } from "react-native";
 
-export const MainStyle = StyleSheet.create({
+export const DETAIL_HORIZONTAL_MARGIN = 15;
+
+export const MAIN_STYLE = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
