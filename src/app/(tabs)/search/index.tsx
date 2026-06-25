@@ -5,6 +5,7 @@ import { MAIN_STYLE } from "@/constants/styles";
 import { StyleSheet, Text, View } from "react-native";
 
 export default function SearchScreen() {
+
   return (
     <View style={MAIN_STYLE.container}>
       <Text style={style.title}>Search Recipes</Text>
