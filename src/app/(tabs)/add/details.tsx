@@ -4,46 +4,79 @@ import ImageDisplay from "@/components/details/image-display";
 import ButtonWrapper from "@/components/general/button-wrapper";
 import Category from "@/components/general/category";
 import { DETAIL_HORIZONTAL_MARGIN, MAIN_STYLE } from "@/constants/styles";
+import { Ingredient } from "@/recipe/ingredient";
 import Feather from "@expo/vector-icons/Feather";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { Stack } from "expo-router";
-import { ScrollView, StyleSheet, Text, useWindowDimensions, View } from "react-native";
+import { router, Stack } from "expo-router";
+import { useRef, useState } from "react";
+import { ScrollView, StyleSheet, Text, TextInput, useWindowDimensions, View } from "react-native";
+
+export type IngredientPair = {
+    ingredient: Ingredient
+    key: number
+}
+
+export type InstructionPair = {
+    instruction: string
+    key: number
+}
 
 export default function AddDetailScreen() {
 
+  const website = "Website"
+  const author = "Author"
+
+  const textInputRef = useRef<TextInput>(null);
+  const [title, setTitle] = useState<string>("Food Name?");
+  const [titleEditable, setTitleEditable] = useState<boolean>(false);
+  const [ingredients, setIngredients] = useState<IngredientPair[]>([{ingredient: new Ingredient(), key: 0}]);
+  const [instructions, setInstructions] = useState<InstructionPair[]>([{instruction: "", key: 0}]);
   const {width} = useWindowDimensions();
 
   const editTitle = () => {
-
+    setTitleEditable(true);
+    textInputRef.current?.focus();
   }
 
   const addRecipe = () => {
-
+    
   }
 
   const cancelRecipe = () => {
-
+    router.navigate("/add");
   }
 
   return (
     <>
       <Stack.Screen options={{
+        
         headerTitle: () => {
-          return <View style={{flexDirection:'row', gap: 5}}>
-            <Text style={style.title}>Food Name?</Text>
-            <ButtonWrapper width={40} onPress={editTitle} noBackground={true}>
-              <Feather name="edit" size={24}/>
-            </ButtonWrapper>
+          return <View style={{flexDirection:'row', gap: 5, width: width * .8}}>
+            <TextInput
+              ref={textInputRef}
+              style={(titleEditable)? style.titleTextInputEnabled: style.titleTextInputDisabled}
+              value={title}
+              editable = {titleEditable}
+              focusable = {titleEditable}
+              onChangeText={setTitle}
+              onBlur={() => setTitleEditable(false)}
+            />
           </View>
         },
-        headerTitleAlign:'center', 
-        headerTitleStyle: style.title,
+        headerRight: () => {
+          return <View style = {{paddingRight: 10}}>
+            {(!titleEditable) && <ButtonWrapper width={40} onPress={editTitle} noBackground={true}>
+                <Feather name={"edit"} size={24}/>
+              </ButtonWrapper>}
+            </View>
+        },
+        headerTitleAlign:'center'
       }}/>
       <View style={MAIN_STYLE.scrollContainer}>
         <ScrollView 
         style = {{width: width}}
         contentContainerStyle={style.scrollView}>
-          <Text style={style.text}>{"From: Website\nBy: Author"}</Text>
+          <Text style={style.text}>{"From: " + website + "\nBy: " + author}</Text>
           <Text style={[style.subtitle, {marginHorizontal: DETAIL_HORIZONTAL_MARGIN}]}>Categories</Text>
           <View style={[style.row,{flexWrap: 'wrap'}]}>
             <Category editable={true}/>
@@ -53,11 +86,11 @@ export default function AddDetailScreen() {
           <ImageDisplay/>
           <View style={style.section}>
             <Text style={style.subtitle}>Ingredients (1x)</Text>
-            <IngredientFormBuilder/>
+            <IngredientFormBuilder ingredients={ingredients} setIngredients={setIngredients}/>
           </View>
           <View style={style.section}>
             <Text style={style.subtitle}>Instructions</Text>
-            <InstructionFormBuilder/>
+            <InstructionFormBuilder instructions={instructions} setInstructions={setInstructions}/>
           </View>
           <View style={[style.buttonRow]}>
             <ButtonWrapper width={'40%'} onPress={cancelRecipe}>
@@ -76,8 +109,20 @@ export default function AddDetailScreen() {
 }
 
 export const style = StyleSheet.create({
-title: {
-    fontSize: 30
+  header: {
+    width: 500
+  },
+  titleTextInputEnabled: {
+    textAlign: 'center',
+    fontSize: 25,
+    width: '100%'
+  },
+  titleTextInputDisabled:{
+    textAlign: 'center',
+    fontSize: 25,
+    width: '100%',
+    borderWidth: 0,
+    outlineStyle: 'none' as any
   },
   subtitle:{
     fontSize: 25
