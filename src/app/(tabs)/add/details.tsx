@@ -1,3 +1,4 @@
+import { NotificationContext } from "@/app/_layout";
 import IngredientFormBuilder from "@/components/add-details/ingredient-form-builder";
 import InstructionFormBuilder from "@/components/add-details/instruction-form-builder";
 import ImageDisplay from "@/components/details/image-display";
@@ -8,7 +9,7 @@ import { Ingredient } from "@/recipe/ingredient";
 import Feather from "@expo/vector-icons/Feather";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { router, Stack } from "expo-router";
-import { useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import { ScrollView, StyleSheet, Text, TextInput, useWindowDimensions, View } from "react-native";
 
 export type IngredientPair = {
@@ -32,6 +33,7 @@ export default function AddDetailScreen() {
   const [ingredients, setIngredients] = useState<IngredientPair[]>([{ingredient: new Ingredient(), key: 0}]);
   const [instructions, setInstructions] = useState<InstructionPair[]>([{instruction: "", key: 0}]);
   const {width} = useWindowDimensions();
+  const notificationUpdate = useContext(NotificationContext);
 
   const editTitle = () => {
     setTitleEditable(true);
@@ -39,7 +41,7 @@ export default function AddDetailScreen() {
   }
 
   const addRecipe = () => {
-    
+    notificationUpdate(Math.random().toString());
   }
 
   const cancelRecipe = () => {
