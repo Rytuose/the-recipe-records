@@ -5,7 +5,9 @@ import ImageDisplay from "@/components/details/image-display";
 import ButtonWrapper from "@/components/general/button-wrapper";
 import Category from "@/components/general/category";
 import { DETAIL_HORIZONTAL_MARGIN, MAIN_STYLE } from "@/constants/styles";
+import { addRecipeDatabase } from "@/db/recipe-db";
 import { Ingredient } from "@/recipe/ingredient";
+import { Recipe } from "@/recipe/recipe";
 import Feather from "@expo/vector-icons/Feather";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { router, Stack } from "expo-router";
@@ -42,6 +44,38 @@ export default function AddDetailScreen() {
 
   const addRecipe = () => {
     notificationUpdate(Math.random().toString());
+    const recipe = new Recipe();
+
+    const ingredientStrings = new Array<Ingredient>(ingredients.length-1); 
+    const instructionStrings = new Array<string>(instructions.length-1);
+
+    ingredients.forEach((value, index) => {
+      if(index < ingredientStrings.length){
+        ingredientStrings[index] = value.ingredient
+      }
+    })
+    instructions.forEach((value, index) => {
+      if(index < instructionStrings.length){
+        instructionStrings[index] = value.instruction
+      }
+    })
+
+    recipe.name = title;
+    recipe.website = website;
+    recipe.author = author;
+    recipe.ingredients = ingredientStrings;
+    recipe.instructions = instructionStrings;
+
+    try{
+      addRecipeDatabase(recipe);
+    }
+    catch(e){
+      notificationUpdate("Error saving changes: " + e)
+    }
+
+    //router.navigate("/add");
+
+    
   }
 
   const cancelRecipe = () => {
