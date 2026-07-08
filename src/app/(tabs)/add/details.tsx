@@ -43,7 +43,6 @@ export default function AddDetailScreen() {
   }
 
   const addRecipe = () => {
-    notificationUpdate(Math.random().toString());
     const recipe = new Recipe();
 
     const ingredientStrings = new Array<Ingredient>(ingredients.length-1); 
@@ -68,12 +67,13 @@ export default function AddDetailScreen() {
 
     try{
       addRecipeDatabase(recipe);
+      notificationUpdate("Successfully saved recipe")
     }
     catch(e){
       notificationUpdate("Error saving changes: " + e)
     }
 
-    //router.navigate("/add");
+    router.navigate("/add");
 
     
   }

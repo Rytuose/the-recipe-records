@@ -13,3 +13,10 @@ export class Recipe{
     ingredients: Ingredient[] = [];
     instructions: string[] = [];
 }
+
+export type RecipeSummaryDetail = {
+    id: number;
+    name: string;
+    cooking_time: number;
+    starred: boolean;
+}

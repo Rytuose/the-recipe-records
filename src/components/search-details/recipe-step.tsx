@@ -1,12 +1,15 @@
 import { StyleSheet, Text, View } from "react-native";
 import Checkbox from "./checkbox";
 
+type Props = {
+    text: string
+}
 
-export default function RecipeStep(){
+export default function RecipeStep({text}:Props){
     return <View style={style.view}>
         <Checkbox checkboxSize={30}/>
         {/*TODO: Wrapping works with long string but not long words with no spaces to break*/}
-        <Text style={style.text}>Recipe Step</Text>
+        <Text style={style.text}>{text}</Text>
     </View>
 }
 

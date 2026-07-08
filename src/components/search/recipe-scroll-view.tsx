@@ -1,10 +1,15 @@
+import { RecipeSummaryDetail } from "@/recipe/recipe";
 import { FlatList, StyleSheet, useWindowDimensions } from "react-native";
 import RecipeSummary, { RECIPE_SUMMARY_WIDTH } from "./recipe-summary";
 
 const GAP = 10;
 const MARGIN = 15;
 
-export default function RecipeScrollView(){
+type Props = {
+  recipies: RecipeSummaryDetail[]
+}
+
+export default function RecipeScrollView({recipies}:Props){
 
     const {width} = useWindowDimensions();
     
@@ -12,15 +17,16 @@ export default function RecipeScrollView(){
 
     const tempData = [1,2,3,4,5,6,7]
 
+
     return  <FlatList
             key={columnCount}
             style = {style.view}
             contentContainerStyle = {style.containerStyle}
             columnWrapperStyle = {(columnCount > 1)?style.wrapperStyle:undefined}
             numColumns={columnCount}
-            data = {tempData}
+            data = {recipies}
             renderItem={({item}) => {     
-                return <RecipeSummary/>
+                return <RecipeSummary summary={item}/>
             }}
         />
 }

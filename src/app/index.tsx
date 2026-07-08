@@ -1,4 +1,4 @@
-import { deleteDatabase, initDatabase } from '@/db/recipe-db';
+import { initDatabase } from '@/db/recipe-db';
 import { Redirect } from 'expo-router';
 import { useContext, useEffect } from 'react';
 import { NotificationContext } from './_layout';
@@ -17,7 +17,7 @@ export default function Index() {
 // TODO: Try-catch the system
 async function StartUp(notification:(text:string)=>void){
   try {
-    await deleteDatabase(); // For testing purposes
+    //await deleteDatabase(); // For testing purposes
     await initDatabase();
   }
   catch(e){
