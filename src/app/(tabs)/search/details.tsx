@@ -1,17 +1,55 @@
+import { NotificationContext } from "@/app/_layout";
 import ImageDisplay from "@/components/details/image-display";
 import ButtonWrapper from "@/components/general/button-wrapper";
 import Category from "@/components/general/category";
 import SegmentedButton from "@/components/general/segmented-button";
 import RecipeStepBuilder from "@/components/search-details/recipe-step-builder";
 import { DETAIL_HORIZONTAL_MARGIN, MAIN_STYLE } from "@/constants/styles";
+import { getRecipeById } from "@/db/recipe-db";
+import { Recipe } from "@/recipe/recipe";
 import Feather from "@expo/vector-icons/Feather";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { Stack } from "expo-router";
+import { Stack, useFocusEffect, useLocalSearchParams } from "expo-router";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { ScrollView, StyleSheet, Text, useWindowDimensions, View } from "react-native";
+
+
 
 export default function DetailScreen() {
 
+  const notificationUpdate = useContext(NotificationContext);
   const {width} = useWindowDimensions();
+  const recipeId = useLocalSearchParams().id;
+  const [recipe, setRecipe] = useState<Recipe|null>(null);
+
+  if(recipeId === undefined || !(typeof(recipeId) === "string")){
+    useEffect(() => {notificationUpdate("Couldn't find recipe")}, [])
+    return <></>
+  }
+
+
+  useFocusEffect(
+    useCallback(() => {
+
+      const getData = async () => {
+        const queriedRecipe = await getRecipeById( Number.parseInt(recipeId));
+        if(queriedRecipe === null){
+          notificationUpdate("Couldn't find recipe");
+          return;
+        }
+        setRecipe(queriedRecipe);
+      }
+
+      getData();
+
+      console.log("Opened Detail Screen");
+
+    }, [])
+  )
+
+  if(recipe === null){
+    return <Text>Loading Recipe</Text>
+  }
 
   const onEdit = () => {
 
@@ -21,10 +59,11 @@ export default function DetailScreen() {
 
   }
 
+
   return (
     <>
       <Stack.Screen options={{
-        title: "Food Name?", 
+        title: recipe.name, 
         headerTitleAlign:'center', 
         headerTitleStyle: style.title,
       }}/>
@@ -32,7 +71,7 @@ export default function DetailScreen() {
         <ScrollView 
         style = {{width: width}}
         contentContainerStyle={style.scrollView}>
-          <Text style={style.text}>{"From: Website\nBy: Author"}</Text>
+          <Text style={style.text}>{`From: ${recipe.website}\nBy: ${recipe.author}`}</Text>
           <View style={[style.row,{flexWrap: 'wrap'}]}>
             <Category/>
             <Category/>
@@ -53,11 +92,11 @@ export default function DetailScreen() {
           </View>
           <View style={style.section}>
             <Text style={style.subtitle}>Ingredients</Text>
-            <RecipeStepBuilder/>
+            <RecipeStepBuilder recipeSteps={recipe.ingredients.map(val => val.toString())}/>
           </View>
           <View style={style.section}>
             <Text style={style.subtitle}>Instructions</Text>
-            <RecipeStepBuilder/>
+            <RecipeStepBuilder recipeSteps={recipe.instructions}/>
           </View>
         </ScrollView>
       </View>

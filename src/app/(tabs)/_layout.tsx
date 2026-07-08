@@ -1,10 +1,11 @@
+import { BOTTOM_NAV_BAR_HEIGHT } from '@/constants/styles';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Tabs } from "expo-router";
 
 export default function TabLayout() {
   return <Tabs screenOptions={{
     tabBarStyle: {
-      height: 60,
+      height: BOTTOM_NAV_BAR_HEIGHT,
       flexDirection: 'column'
     }
   }}>
