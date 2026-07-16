@@ -201,8 +201,8 @@ export async function getRecipeById(id:number){
     recipe.website = result!.website;
     recipe.cooking_time = result!.cooking_time;
     recipe.author = result!.author;
-    recipe.instructions = result!.instructions.split("\n")
-    recipe.images = result!.images.split("\n")
+    recipe.instructions = (result!.instructions === "")?[]:result!.instructions.split("\n")
+    recipe.images = (result!.images)?[]:result!.images.split("\n")
 
     //TODO Fill ingredients
     let ingredientResult:{

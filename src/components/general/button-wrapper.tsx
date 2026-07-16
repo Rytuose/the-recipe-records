@@ -4,14 +4,15 @@ import { DimensionValue, Pressable, StyleSheet } from "react-native";
 type Props = PropsWithChildren<{
     width: DimensionValue
     height?: DimensionValue
-    noBackground?: Boolean
+    noBorder?: Boolean
+    backgroundColor?: string
     onPress?: () => void
 }>
 
 
-export default function ButtonWrapper({width, height, noBackground, children, onPress}: Props){
+export default function ButtonWrapper({width, height, noBorder, backgroundColor, children, onPress}: Props){
   return <Pressable 
-    style={[style.view, {width: width, height: height, borderWidth: noBackground?0:3}]}
+    style={[style.view, {width: width, height: height, borderWidth: noBorder?0:3, backgroundColor: backgroundColor}]}
     onPress={onPress}>
       {children}
     </Pressable>

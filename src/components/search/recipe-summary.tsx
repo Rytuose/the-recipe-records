@@ -1,5 +1,6 @@
 
 import { NotificationContext } from '@/app/_layout';
+import { getColorScheme } from '@/constants/color-scheme';
 import { RecipeSummaryDetail } from '@/recipe/recipe';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { router } from "expo-router";
@@ -23,8 +24,11 @@ export default function RecipeSummary({summary}:Props){
     const [favorite, setFavorite] = useState<Boolean>(summary.starred);
     const notificationUpdate = useContext(NotificationContext);
 
+    const colorScheme = getColorScheme();
     const favoriteName = (favorite)? 'star': 'star-o';
-    const favoriteColor = (favorite)? '#ffe234': '#000000';
+    const favoriteColor = (favorite)? '#ffd700': colorScheme.onSecondary;
+
+
 
     const recipeClick = async () => {
         // const recipe = await getRecipeById(summary.id)
@@ -39,15 +43,15 @@ export default function RecipeSummary({summary}:Props){
         setFavorite(!favorite);
     }
 
-    return <View style={style.view}>
+    return <View style={[style.view, {backgroundColor: colorScheme.secondary}]}>
         <Pressable
         style={style.button}
         onPress={recipeClick}>
             <View style={style.horizontalView}>
                 <View style={style.imagePlaceholder}/>
                 <View style={{flex: 1}}>
-                    <Text style={style.titleText}>{summary.name}</Text>
-                    <Text style={style.bodyText}>Time: {summary.cooking_time} hrs</Text>
+                    <Text style={[style.titleText, {color: colorScheme.onSecondary}]}>{summary.name}</Text>
+                    <Text style={[style.bodyText,{color: colorScheme.onSecondary}]}>Time: {summary.cooking_time} hrs</Text>
                 </View>
                 <View>
                     <Pressable style={style.favoriteButton} onPress={favoriteRecipe}>

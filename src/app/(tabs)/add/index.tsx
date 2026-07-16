@@ -1,5 +1,6 @@
 import WebsiteInput from "@/components/add/website-input";
 import ButtonWrapper from "@/components/general/button-wrapper";
+import { getColorScheme } from "@/constants/color-scheme";
 import { MAIN_STYLE } from "@/constants/styles";
 import Feather from "@expo/vector-icons/Feather";
 import { useRouter } from "expo-router";
@@ -10,6 +11,7 @@ const BUTTON_FONT_SIZE = 20;
 
 export default function AddScreen() {
 
+  const colorScheme = getColorScheme();
   const router = useRouter();
 
   
@@ -27,15 +29,15 @@ export default function AddScreen() {
       <Text style={style.title}>The Recipe Records</Text>
       <Text style={style.subtitle}>Submit a link</Text>
       <WebsiteInput/>
-      <ButtonWrapper width={BUTTON_WIDTH} onPress={linkRecipe}>
-        <Feather name={"send"} size={20}/>
-        <Text style={{fontSize: BUTTON_FONT_SIZE}}>Go!</Text>
+      <ButtonWrapper width={BUTTON_WIDTH} onPress={linkRecipe} backgroundColor={colorScheme.primary}>
+        <Feather name={"send"} size={20} color={colorScheme.onPrimary}/>
+        <Text style={{fontSize: BUTTON_FONT_SIZE, color: colorScheme.onPrimary}}>Go!</Text>
       </ButtonWrapper>
       <Text style={style.title}>OR</Text>
       <Text style={style.subtitle}>Write a recipe</Text>
-      <ButtonWrapper width={BUTTON_WIDTH} onPress={writeRecipe}>
-        <Feather name={"pen-tool"} size={20}/>
-        <Text style={{fontSize: BUTTON_FONT_SIZE}}>New Recipe</Text>
+      <ButtonWrapper width={BUTTON_WIDTH} onPress={writeRecipe} backgroundColor={colorScheme.primary}>
+        <Feather name={"pen-tool"} size={20} color={colorScheme.onPrimary}/>
+        <Text style={{fontSize: BUTTON_FONT_SIZE, color: colorScheme.onPrimary}}>New Recipe</Text>
       </ButtonWrapper>
     </View>
   );
@@ -44,12 +46,10 @@ export default function AddScreen() {
 export const style = StyleSheet.create({
   title:{
     fontSize: 100,
-    textAlign: "center"
+    textAlign: "center",
+    //color: ThemeColors.coreColors.primary
   },
   subtitle:{
     fontSize: 40
-  },
-  textInput:{
-    backgroundColor: '#41852d'
   }
 })

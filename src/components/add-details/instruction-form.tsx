@@ -1,3 +1,4 @@
+import { getColorScheme } from "@/constants/color-scheme";
 import { PropsWithChildren, useState } from "react";
 import { StyleSheet, TextInput } from "react-native";
 
@@ -14,10 +15,12 @@ export default function InstructionForm({position, initialText, placeholder, upd
     const [inputHeight, setInputHeight] = useState(29);
     const [text, setText] = useState<string>(initialText);
 
+    const colorScheme = getColorScheme();
+
     let prevHeight = inputHeight;
 
     return <TextInput
-        style={[style.textInput,{height: inputHeight}]}
+        style={[style.textInput,{height: inputHeight, backgroundColor:colorScheme.surfaceContainerHigh}]}
         placeholder={placeholder}
         value = {text}
         textAlignVertical="top"

@@ -1,8 +1,11 @@
-import { StyleSheet, TextInput } from "react-native"
+import { getColorScheme } from "@/constants/color-scheme";
+import { StyleSheet, TextInput } from "react-native";
 
 export default function WebsiteInput(){
+  const colorScheme = getColorScheme();
+
   return <TextInput
-    style={style.textInput}
+    style={[style.textInput, {backgroundColor:colorScheme.surfaceContainerHigh}]}
     defaultValue=""
     placeholder="Link Here"
   />

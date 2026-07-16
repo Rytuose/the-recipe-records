@@ -1,3 +1,4 @@
+import { getColorScheme } from "@/constants/color-scheme";
 import { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
@@ -13,6 +14,8 @@ type Props = {
 export default function SegmentedButton({options}: Props){
 
     const [selectedIndex, setSelectedIndex] = useState<number>(1);
+
+    const colorScheme = getColorScheme();
 
     const changeSelection = (index:number) => {
         if (selectedIndex !== index){
@@ -33,9 +36,9 @@ export default function SegmentedButton({options}: Props){
                     borderTopRightRadius: (end)?BORDER_RADIUS:0,
                     borderBottomRightRadius: (end)?BORDER_RADIUS:0,
                     paddingHorizontal: (start || end)? PADDING: 0,
-                    backgroundColor: (index === selectedIndex)?'#80afdd':undefined
+                    backgroundColor: (index === selectedIndex)?colorScheme.secondary:undefined
                 }]}>
-                    <Text style={style.text}>{value}</Text>
+                    <Text style={[style.text,{color:(index === selectedIndex)?colorScheme.onSecondary:'black'}]}>{value}</Text>
                 </Pressable>
             })}
     </View>
