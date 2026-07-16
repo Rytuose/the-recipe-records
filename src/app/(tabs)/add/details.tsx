@@ -92,7 +92,7 @@ export default function AddDetailScreen() {
           backgroundColor: colorScheme.primary
         },
         headerTitle: () => {
-          return <View style={{flexDirection:'row', gap: 5, width: width * .8}}>
+          return <View style={{flexDirection:'row', gap: 5, width: width * .8, alignItems:"center"}}>
             <TextInput
               ref={textInputRef}
               style={[(titleEditable)? [style.titleTextInputEnabled,{borderColor:colorScheme.onPrimary}]: style.titleTextInputDisabled,{color:colorScheme.onPrimary}]}
@@ -135,11 +135,11 @@ export default function AddDetailScreen() {
           </View>
           <View style={[style.buttonRow]}>
             <ButtonWrapper width={'40%'} onPress={cancelRecipe} backgroundColor={colorScheme.tertiary}>
-              <Text style={{fontSize: 20, color:colorScheme.onTertiary}}>Cancel</Text>
+              <Text style={[style.buttonText, {color:colorScheme.onTertiary}]}>Cancel</Text>
               <Ionicons name="close" size={24} color={colorScheme.onTertiary}/>
             </ButtonWrapper>
             <ButtonWrapper width={'40%'} onPress={addRecipe} backgroundColor={colorScheme.primary}>
-              <Text style={{fontSize: 20, color:colorScheme.onPrimary}}>Add Recipe</Text>
+              <Text style={[style.buttonText, {color:colorScheme.onPrimary}]}>Add Recipe</Text>
               <Ionicons name="add" size={24} color={colorScheme.onPrimary}/>
             </ButtonWrapper>
           </View>
@@ -155,24 +155,30 @@ export const style = StyleSheet.create({
   },
   titleTextInputEnabled: {
     textAlign: 'center',
-    fontSize: 25,
+    fontSize: 27,
     width: '100%',
+    height: '80%',
     borderWidth: 3,
     outlineStyle: 'none' as any,
+    fontFamily:"Title"
   },
   titleTextInputDisabled:{
     textAlign: 'center',
-    fontSize: 25,
+    fontSize: 27,
     width: '100%',
+    height: '80%',
     borderWidth: 0,
-    outlineStyle: 'none' as any
+    outlineStyle: 'none' as any,
+    fontFamily:"Title"
   },
   subtitle:{
-    fontSize: 25
+    fontSize: 32,
+    fontFamily:"Subtitle"
   },
   text:{
     marginHorizontal: DETAIL_HORIZONTAL_MARGIN,
-    fontSize: 15
+    fontSize: 15,
+    fontFamily:"Body"
   },
   scrollView:{
     marginVertical: 10,
@@ -194,6 +200,7 @@ export const style = StyleSheet.create({
     gap: '10%'
   },
   buttonText:{
-    fontSize: 15
+    fontSize: 20,
+    fontFamily: "Body"
   }
 })

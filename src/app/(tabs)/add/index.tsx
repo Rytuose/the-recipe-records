@@ -26,18 +26,18 @@ export default function AddScreen() {
 
   return (
     <View style={MAIN_STYLE.container}>
-      <Text style={style.title}>The Recipe Records</Text>
+      <Text style={style.title}>{"The\nRecipe\nRecords"}</Text>
       <Text style={style.subtitle}>Submit a link</Text>
       <WebsiteInput/>
       <ButtonWrapper width={BUTTON_WIDTH} onPress={linkRecipe} backgroundColor={colorScheme.primary}>
         <Feather name={"send"} size={20} color={colorScheme.onPrimary}/>
-        <Text style={{fontSize: BUTTON_FONT_SIZE, color: colorScheme.onPrimary}}>Go!</Text>
+        <Text style={[style.buttonText, {color: colorScheme.onPrimary}]}>Go!</Text>
       </ButtonWrapper>
-      <Text style={style.title}>OR</Text>
+      <Text style={[style.title, {fontSize: 70}]}>OR</Text>
       <Text style={style.subtitle}>Write a recipe</Text>
       <ButtonWrapper width={BUTTON_WIDTH} onPress={writeRecipe} backgroundColor={colorScheme.primary}>
         <Feather name={"pen-tool"} size={20} color={colorScheme.onPrimary}/>
-        <Text style={{fontSize: BUTTON_FONT_SIZE, color: colorScheme.onPrimary}}>New Recipe</Text>
+        <Text style={[style.buttonText, {color: colorScheme.onPrimary}]}>New Recipe</Text>
       </ButtonWrapper>
     </View>
   );
@@ -45,11 +45,18 @@ export default function AddScreen() {
 
 export const style = StyleSheet.create({
   title:{
-    fontSize: 100,
+    fontSize: 90,
+    lineHeight: 115,
     textAlign: "center",
+    fontFamily: "Title"
     //color: ThemeColors.coreColors.primary
   },
   subtitle:{
-    fontSize: 40
+    fontSize: 45,
+    fontFamily: "Subtitle"
+  },
+  buttonText:{
+    fontSize: BUTTON_FONT_SIZE,
+    fontFamily: "Body"
   }
 })

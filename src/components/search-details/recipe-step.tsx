@@ -21,6 +21,6 @@ export const style = StyleSheet.create({
     text:{
         fontSize: 20,
         marginTop: 1,
-        
+        fontFamily:"Body"
     }
 })

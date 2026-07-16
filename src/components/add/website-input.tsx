@@ -19,6 +19,7 @@ export const style = StyleSheet.create({
     borderColor: "#000000",
     borderWidth: 3,
     fontSize: 20,
-    padding: 20
+    padding: 20,
+    fontFamily: "Body"
   }
 })

@@ -16,6 +16,10 @@ export default function TabLayout() {
       options={{ 
         headerShown: false,
         title: 'Add',
+        tabBarLabelStyle:{
+          fontFamily:"Body",
+          fontSize: 15
+        },
         tabBarActiveTintColor: getColorScheme().primary,
         tabBarIcon: ({color}) => (<Ionicons name="home-sharp" size={30} color={color} />)
       }}
@@ -25,6 +29,10 @@ export default function TabLayout() {
       options={{ 
         headerShown: false, 
         title: 'Search',
+        tabBarLabelStyle:{
+          fontFamily:"Body",
+          fontSize: 15
+        },
         tabBarActiveTintColor: getColorScheme().primary,
         tabBarIcon: ({color}) => (<Ionicons name="search-sharp" size={30} color={color} />)
       }}/>

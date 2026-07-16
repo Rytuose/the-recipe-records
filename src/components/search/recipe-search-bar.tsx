@@ -54,6 +54,7 @@ export const style = StyleSheet.create({
     fontSize: 20,
     paddingHorizontal: 3,
     borderWidth: 0,
-    outlineStyle: 'none' as any
+    outlineStyle: 'none' as any,
+    fontFamily: "Body"
   }
 })

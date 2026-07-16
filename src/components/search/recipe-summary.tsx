@@ -83,10 +83,12 @@ export const style = StyleSheet.create({
         justifyContent: 'center',
     },
     titleText:{
-        fontSize: 30
+        fontSize: 30,
+        fontFamily: "Subtitle"
     },
     bodyText:{
-        fontSize: 20
+        fontSize: 20,
+        fontFamily: "Body"
     },
     horizontalView:{
         flexDirection: 'row',

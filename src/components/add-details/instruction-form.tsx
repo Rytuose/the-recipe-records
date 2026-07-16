@@ -50,5 +50,6 @@ export const style = StyleSheet.create({
         padding: 5,
         paddingBottom: 10,
         overflow: 'hidden',
+        fontFamily:"Body"
     }
 })

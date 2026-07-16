@@ -25,7 +25,7 @@ export default function Category({editable, categoryAdd}: Prop){
     const textColor = categoryAdd?'black':colorScheme.onPrimary;
 
     return <View style={[style.view, {paddingRight: editable?5:10, borderWidth: categoryAdd?3:0, backgroundColor: categoryAdd?colorScheme.surfaceContainerHigh:colorScheme.primary}]}>
-        <Text style={{paddingBottom: 1, color:textColor}}>{(categoryAdd)?"Add Category":"Category Name"}</Text>
+        <Text style={{paddingBottom: 1, color:textColor, fontFamily:"Body"}}>{(categoryAdd)?"Add Category":"Category Name"}</Text>
         {editable && 
         <Pressable style={{ width: 26, alignItems:'center'}} onPress={deleteCategory}>
             <Ionicons name="close" size={24} color={textColor}/>

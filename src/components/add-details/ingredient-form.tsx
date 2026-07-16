@@ -93,17 +93,20 @@ export const style = StyleSheet.create({
         borderWidth: 2,
         height: HEIGHT,
         padding: 5,
+        fontFamily:"Body"
     },
     measurement: {
         width: '25%',
         borderWidth: 2,
         height: HEIGHT,
         padding: 5,
+        fontFamily:"Body",
     },
     ingredient:{
         borderWidth: 2,
         height: HEIGHT,
         padding: 5,
+        fontFamily:"Body",
         flex: 1
     }
 })

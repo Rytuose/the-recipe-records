@@ -70,7 +70,7 @@ export default function DetailScreen() {
         headerTitleStyle: style.title,
         headerTintColor: colorScheme.onPrimary,
         headerStyle:{
-          backgroundColor: colorScheme.primary
+          backgroundColor: colorScheme.primary,
         }
       }}/>
       <View style={MAIN_STYLE.scrollContainer}>
@@ -113,14 +113,17 @@ export default function DetailScreen() {
 
 export const style = StyleSheet.create({
   title: {
-    fontSize: 30
+    fontSize: 27,
+    fontFamily: "Title"
   },
   subtitle:{
-    fontSize: 25
+    fontSize: 32,
+    fontFamily:"Subtitle"
   },
   text:{
     marginHorizontal: DETAIL_HORIZONTAL_MARGIN,
-    fontSize: 15
+    fontSize: 15,
+    fontFamily:"Body"
   },
   scrollView:{
     marginVertical: 10,
@@ -136,7 +139,8 @@ export const style = StyleSheet.create({
     gap: 10
   },
   buttonText:{
-    fontSize: 15
+    fontSize: 15,
+    fontFamily:"Body"
   }
 
 })

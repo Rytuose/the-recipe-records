@@ -59,6 +59,7 @@ export const style = StyleSheet.create({
         borderLeftWidth: BORDER_WIDTH,
     },
     text:{
-        fontSize: 17
+        fontSize: 17,
+        fontFamily:"Body"
     }
 })
