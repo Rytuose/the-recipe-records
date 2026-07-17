@@ -4,6 +4,7 @@ import InstructionFormBuilder from "@/components/add-details/instruction-form-bu
 import ImageDisplay from "@/components/details/image-display";
 import ButtonWrapper from "@/components/general/button-wrapper";
 import Category from "@/components/general/category";
+import { getColorScheme } from "@/constants/color-scheme";
 import { DETAIL_HORIZONTAL_MARGIN, MAIN_STYLE } from "@/constants/styles";
 import { addRecipeDatabase } from "@/db/recipe-db";
 import { Ingredient } from "@/recipe/ingredient";
@@ -36,6 +37,7 @@ export default function AddDetailScreen() {
   const [instructions, setInstructions] = useState<InstructionPair[]>([{instruction: "", key: 0}]);
   const {width} = useWindowDimensions();
   const notificationUpdate = useContext(NotificationContext);
+  const colorScheme = getColorScheme();
 
   const editTitle = () => {
     setTitleEditable(true);
@@ -85,12 +87,15 @@ export default function AddDetailScreen() {
   return (
     <>
       <Stack.Screen options={{
-        
+        headerTintColor: colorScheme.onPrimary,
+        headerStyle:{
+          backgroundColor: colorScheme.primary
+        },
         headerTitle: () => {
-          return <View style={{flexDirection:'row', gap: 5, width: width * .8}}>
+          return <View style={{flexDirection:'row', gap: 5, width: width * .8, alignItems:"center"}}>
             <TextInput
               ref={textInputRef}
-              style={(titleEditable)? style.titleTextInputEnabled: style.titleTextInputDisabled}
+              style={[(titleEditable)? [style.titleTextInputEnabled,{borderColor:colorScheme.onPrimary}]: style.titleTextInputDisabled,{color:colorScheme.onPrimary}]}
               value={title}
               editable = {titleEditable}
               focusable = {titleEditable}
@@ -101,8 +106,8 @@ export default function AddDetailScreen() {
         },
         headerRight: () => {
           return <View style = {{paddingRight: 10}}>
-            {(!titleEditable) && <ButtonWrapper width={40} onPress={editTitle} noBackground={true}>
-                <Feather name={"edit"} size={24}/>
+            {(!titleEditable) && <ButtonWrapper width={40} onPress={editTitle} noBorder={true}>
+                <Feather name={"edit"} size={24} color={colorScheme.onPrimary}/>
               </ButtonWrapper>}
             </View>
         },
@@ -129,13 +134,13 @@ export default function AddDetailScreen() {
             <InstructionFormBuilder instructions={instructions} setInstructions={setInstructions}/>
           </View>
           <View style={[style.buttonRow]}>
-            <ButtonWrapper width={'40%'} onPress={cancelRecipe}>
-              <Text style={{fontSize: 20}}>Cancel</Text>
-              <Ionicons name="close" size={24}/>
+            <ButtonWrapper width={'40%'} onPress={cancelRecipe} backgroundColor={colorScheme.tertiary}>
+              <Text style={[style.buttonText, {color:colorScheme.onTertiary}]}>Cancel</Text>
+              <Ionicons name="close" size={24} color={colorScheme.onTertiary}/>
             </ButtonWrapper>
-            <ButtonWrapper width={'40%'} onPress={addRecipe}>
-              <Text style={{fontSize: 20}}>Add Recipe</Text>
-              <Ionicons name="add" size={24}/>
+            <ButtonWrapper width={'40%'} onPress={addRecipe} backgroundColor={colorScheme.primary}>
+              <Text style={[style.buttonText, {color:colorScheme.onPrimary}]}>Add Recipe</Text>
+              <Ionicons name="add" size={24} color={colorScheme.onPrimary}/>
             </ButtonWrapper>
           </View>
         </ScrollView>
@@ -150,22 +155,30 @@ export const style = StyleSheet.create({
   },
   titleTextInputEnabled: {
     textAlign: 'center',
-    fontSize: 25,
-    width: '100%'
+    fontSize: 27,
+    width: '100%',
+    height: '80%',
+    borderWidth: 3,
+    outlineStyle: 'none' as any,
+    fontFamily:"Title"
   },
   titleTextInputDisabled:{
     textAlign: 'center',
-    fontSize: 25,
+    fontSize: 27,
     width: '100%',
+    height: '80%',
     borderWidth: 0,
-    outlineStyle: 'none' as any
+    outlineStyle: 'none' as any,
+    fontFamily:"Title"
   },
   subtitle:{
-    fontSize: 25
+    fontSize: 32,
+    fontFamily:"Subtitle"
   },
   text:{
     marginHorizontal: DETAIL_HORIZONTAL_MARGIN,
-    fontSize: 15
+    fontSize: 15,
+    fontFamily:"Body"
   },
   scrollView:{
     marginVertical: 10,
@@ -187,6 +200,7 @@ export const style = StyleSheet.create({
     gap: '10%'
   },
   buttonText:{
-    fontSize: 15
+    fontSize: 20,
+    fontFamily: "Body"
   }
 })

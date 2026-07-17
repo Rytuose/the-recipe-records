@@ -4,6 +4,7 @@ import ButtonWrapper from "@/components/general/button-wrapper";
 import Category from "@/components/general/category";
 import SegmentedButton from "@/components/general/segmented-button";
 import RecipeStepBuilder from "@/components/search-details/recipe-step-builder";
+import { getColorScheme } from "@/constants/color-scheme";
 import { DETAIL_HORIZONTAL_MARGIN, MAIN_STYLE } from "@/constants/styles";
 import { getRecipeById } from "@/db/recipe-db";
 import { Recipe } from "@/recipe/recipe";
@@ -21,6 +22,7 @@ export default function DetailScreen() {
   const {width} = useWindowDimensions();
   const recipeId = useLocalSearchParams().id;
   const [recipe, setRecipe] = useState<Recipe|null>(null);
+  const colorScheme = getColorScheme();
 
   if(recipeId === undefined || !(typeof(recipeId) === "string")){
     useEffect(() => {notificationUpdate("Couldn't find recipe")}, [])
@@ -66,6 +68,10 @@ export default function DetailScreen() {
         title: recipe.name, 
         headerTitleAlign:'center', 
         headerTitleStyle: style.title,
+        headerTintColor: colorScheme.onPrimary,
+        headerStyle:{
+          backgroundColor: colorScheme.primary,
+        }
       }}/>
       <View style={MAIN_STYLE.scrollContainer}>
         <ScrollView 
@@ -74,17 +80,18 @@ export default function DetailScreen() {
           <Text style={style.text}>{`From: ${recipe.website}\nBy: ${recipe.author}`}</Text>
           <View style={[style.row,{flexWrap: 'wrap'}]}>
             <Category/>
-            <Category/>
+            <Category editable={true}/>
+            <Category categoryAdd={true}/>
           </View>
           <ImageDisplay/>
           <View style={style.row}>
-            <ButtonWrapper width={100} height={37} onPress={onEdit}>
-              <Feather name='edit' size={20}/>
-              <Text style={style.buttonText}>Edit</Text>
+            <ButtonWrapper width={100} height={37} onPress={onEdit} backgroundColor={colorScheme.primary}>
+              <Feather name='edit' size={20} color={colorScheme.onPrimary}/>
+              <Text style={[style.buttonText,{color: colorScheme.onPrimary}]}>Edit</Text>
             </ButtonWrapper>
-            <ButtonWrapper width={100} height = {37} onPress={onDelete}>
-              <Ionicons name='trash-outline' size={22}/>
-              <Text style={style.buttonText}>Delete</Text>
+            <ButtonWrapper width={100} height = {37} onPress={onDelete} backgroundColor={colorScheme.tertiary}>
+              <Ionicons name='trash-outline' size={22} color={colorScheme.onTertiary}/>
+              <Text style={[style.buttonText,{color: colorScheme.onTertiary}]}>Delete</Text>
             </ButtonWrapper>
           </View>
           <View style={{marginHorizontal: DETAIL_HORIZONTAL_MARGIN}}>
@@ -106,14 +113,17 @@ export default function DetailScreen() {
 
 export const style = StyleSheet.create({
   title: {
-    fontSize: 30
+    fontSize: 27,
+    fontFamily: "Title"
   },
   subtitle:{
-    fontSize: 25
+    fontSize: 32,
+    fontFamily:"Subtitle"
   },
   text:{
     marginHorizontal: DETAIL_HORIZONTAL_MARGIN,
-    fontSize: 15
+    fontSize: 15,
+    fontFamily:"Body"
   },
   scrollView:{
     marginVertical: 10,
@@ -129,7 +139,8 @@ export const style = StyleSheet.create({
     gap: 10
   },
   buttonText:{
-    fontSize: 15
+    fontSize: 15,
+    fontFamily:"Body"
   }
 
 })

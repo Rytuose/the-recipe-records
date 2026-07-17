@@ -27,7 +27,7 @@
       [
         "expo-router",
         {
-          "headers":{
+          "headers": {
             "Cross-Origin-Embedder-Policy": "credentialless",
             "Cross-Origin-Opener-Policy": "same-origin"
           }
@@ -44,7 +44,8 @@
         }
       ],
       "expo-image",
-      "expo-sqlite"
+      "expo-sqlite",
+      "expo-font"
     ],
     "experiments": {
       "typedRoutes": true,
