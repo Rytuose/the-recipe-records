@@ -76,6 +76,7 @@ export async function addRecipeDatabase(recipe:Recipe){
         updateRecipeDatabase(recipe);
         return;
     }
+    
 
     let result = await db.runAsync(`INSERT INTO recipes (recipe_name, website, cooking_time, date_updated, author, starred, instructions, images) 
         VALUES ($recipe_name, $website, $cooking_time, $date_updated, $author, $starred, $instructions, $images)`,
@@ -86,8 +87,8 @@ export async function addRecipeDatabase(recipe:Recipe){
             $date_updated: Date.now(),
             $author: recipe.author,
             $starred: recipe.starred?1:0,
-            $instructions: recipe.instructions.reduce((prev, current) => prev + '\n' + current, "").trim(),
-            $images: recipe.images.reduce((prev, current) => prev + '\n' + current, "").trim()
+            $instructions: JSON.stringify(recipe.instructions),
+            $images: JSON.stringify(recipe.images),
         })
     
     const newId = result.lastInsertRowId
@@ -201,8 +202,8 @@ export async function getRecipeById(id:number){
     recipe.website = result!.website;
     recipe.cooking_time = result!.cooking_time;
     recipe.author = result!.author;
-    recipe.instructions = result!.instructions.split("\n")
-    recipe.images = result!.images.split("\n")
+    recipe.instructions = JSON.parse(result!.instructions)
+    recipe.images = JSON.parse(result!.images)
 
     //TODO Fill ingredients
     let ingredientResult:{
