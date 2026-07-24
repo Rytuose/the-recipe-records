@@ -205,7 +205,6 @@ export async function getRecipeById(id:number){
     recipe.instructions = JSON.parse(result!.instructions)
     recipe.images = JSON.parse(result!.images)
 
-    //TODO Fill ingredients
     let ingredientResult:{
         ingredient_name: string,
         amount: number,
