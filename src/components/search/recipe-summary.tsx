@@ -1,5 +1,6 @@
 
 import { NotificationContext } from '@/app/_layout';
+import { RECIPE_SUMMARY_WIDTH } from '@/constants/constants';
 import { RecipeSummaryDetail } from '@/recipe/recipe';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { router } from "expo-router";
@@ -7,8 +8,6 @@ import { useContext, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
 //const { width: SCREEN_WIDTH } = Dimensions.get('window');
-
-export const RECIPE_SUMMARY_WIDTH = 460;
 
 const RECIPE_SUMMARY_HEIGHT = 150;
 const BORDER_WIDTH = 4;

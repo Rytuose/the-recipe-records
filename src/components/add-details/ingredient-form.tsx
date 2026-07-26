@@ -1,19 +1,27 @@
+import { INGREDIENT_HEIGHT } from "@/constants/constants";
+import { MAIN_STYLE } from "@/constants/styles";
 import { Measurement, MEASUREMENT_NAMES } from "@/recipe/measurement";
 import { useRef, useState } from "react";
 import { StyleSheet, TextInput, View } from "react-native";
+import { Gesture, GestureDetector } from "react-native-gesture-handler";
+import Animated, { SharedValue, useAnimatedStyle } from "react-native-reanimated";
 
 
-const HEIGHT = 30
 
 type Props = {
     position: number
     initialQuantity: string
     initialMeasurement: Measurement
     initialIngredient: string
+    translateY: SharedValue<number[]>
+    moveable: boolean
+    select: (position: number) => void
+    shift: (position: number, translateY: number) => void
+    finalize: (position: number) => void
     update: (position: number, quantity: string, measurement: Measurement, ingredient: string) => void
 }
 
-export default function IngredientForm({position, initialQuantity, initialMeasurement, initialIngredient, update}: Props){
+export default function IngredientForm({position, initialQuantity, initialMeasurement, initialIngredient, translateY, moveable,  select, shift, finalize, update}: Props){
     
     const [quantity, setQuantity] = useState<string>(initialQuantity);
 
@@ -22,7 +30,24 @@ export default function IngredientForm({position, initialQuantity, initialMeasur
 
     const [ingredient, setIngredient] = useState<string>(initialIngredient);
 
-    return <View style={style.view}>
+
+    const drag = Gesture.Pan().onChange((event) => {
+            shift(position, event.changeY);
+        }).onEnd(() => {
+            finalize(position);
+        }).onStart(() => {
+            select(position);
+        })
+
+    const viewStyle = useAnimatedStyle(() => {
+        return {
+            transform:[{
+                translateY: translateY.value[position]
+            }]
+        }
+    })
+
+    return <Animated.View style={[style.view, viewStyle]}>
         <TextInput 
             style={style.number}
             keyboardType="numeric"
@@ -67,16 +92,21 @@ export default function IngredientForm({position, initialQuantity, initialMeasur
             }}
 
         />
-        <TextInput 
-            style={style.ingredient}
-            placeholder="Ingredient"
-            value = {ingredient}
-            onChangeText={setIngredient}
-            onBlur={() => {
-                update(position, quantity, measurement.current, ingredient);
-            }}
-        />
-    </View>
+        <View style={{flexDirection: 'row', flex: 1}}>
+            <TextInput
+                style={style.ingredient}
+                placeholder="Ingredient"
+                value = {ingredient}
+                onChangeText={setIngredient}
+                onBlur={() => {
+                    update(position, quantity, measurement.current, ingredient);
+                }}
+            />
+            {moveable && <GestureDetector gesture={(drag)}>
+                <View style={[MAIN_STYLE.rearrange,{height: INGREDIENT_HEIGHT}]}/>
+            </GestureDetector>}
+        </View>
+    </Animated.View>
 }
 
 export const style = StyleSheet.create({
@@ -88,18 +118,18 @@ export const style = StyleSheet.create({
     number:{
         width: '15%',
         borderWidth: 2,
-        height: HEIGHT,
+        height: INGREDIENT_HEIGHT,
         padding: 5,
     },
     measurement: {
         width: '25%',
         borderWidth: 2,
-        height: HEIGHT,
+        height: INGREDIENT_HEIGHT,
         padding: 5,
     },
     ingredient:{
         borderWidth: 2,
-        height: HEIGHT,
+        height: INGREDIENT_HEIGHT,
         padding: 5,
         flex: 1
     }

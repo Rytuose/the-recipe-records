@@ -1,4 +1,4 @@
-import { BOTTOM_NAV_BAR_HEIGHT } from '@/constants/styles';
+import { BOTTOM_NAV_BAR_HEIGHT } from '@/constants/constants';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Tabs } from "expo-router";
 

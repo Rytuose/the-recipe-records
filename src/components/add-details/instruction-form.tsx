@@ -1,3 +1,4 @@
+import { MAIN_STYLE } from "@/constants/styles";
 import { PropsWithChildren, useState } from "react";
 import { StyleSheet, TextInput, View } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
@@ -60,7 +61,7 @@ export default function InstructionForm({position, initialText, placeholder, tra
             }}
             />
         {moveable && <GestureDetector gesture={drag}>
-            <View style={[style.button,{height: inputHeight}]}/>
+            <View style={[MAIN_STYLE.rearrange,{height: inputHeight}]}/>
         </GestureDetector>}
     </Animated.View>
 }
@@ -78,9 +79,5 @@ export const style = StyleSheet.create({
     view:{
         flex: 1,
         flexDirection: 'row',
-    },
-    button:{
-        width: 60,
-        backgroundColor: '#123456'
     }
 })

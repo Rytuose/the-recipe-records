@@ -1,4 +1,4 @@
-import { BOTTOM_NAV_BAR_HEIGHT } from "@/constants/styles";
+import { BOTTOM_NAV_BAR_HEIGHT } from "@/constants/constants";
 import { StyleSheet, Text, View } from "react-native";
 
 type Props = {

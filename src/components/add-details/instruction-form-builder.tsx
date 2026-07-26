@@ -1,5 +1,5 @@
 import { InstructionPair } from "@/app/(tabs)/add/details";
-import { INSTRUCTION_FORM_STARTING_HEIGHT } from "@/constants/styles";
+import { INSTRUCTION_FORM_STARTING_HEIGHT } from "@/constants/constants";
 import { useRef } from "react";
 import { StyleSheet, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -20,7 +20,7 @@ export default function InstructionFormBuilder(props: Props){
     const keyCounter = useRef(0);
 
     const selectedInstruction = useSharedValue(-1);
-    const translateY = useSharedValue([0]);
+    const translateY = useSharedValue(Array(instructions.length).fill(0));
     const lowerBound = useSharedValue(0);
     const upperBound = useSharedValue(0);
     const shiftAmount = useSharedValue(0);
@@ -174,7 +174,7 @@ export default function InstructionFormBuilder(props: Props){
             return;
         }
         
-        translateY.value = translateY.value.map((val, index) => {
+        translateY.value = translateY.value.map(() => {
             return 0;
         })
         

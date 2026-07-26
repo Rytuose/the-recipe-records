@@ -4,7 +4,8 @@ import InstructionFormBuilder from "@/components/add-details/instruction-form-bu
 import ImageDisplay from "@/components/details/image-display";
 import ButtonWrapper from "@/components/general/button-wrapper";
 import Category from "@/components/general/category";
-import { DETAIL_HORIZONTAL_MARGIN, INSTRUCTION_FORM_STARTING_HEIGHT, MAIN_STYLE } from "@/constants/styles";
+import { DETAIL_HORIZONTAL_MARGIN, INSTRUCTION_FORM_STARTING_HEIGHT } from "@/constants/constants";
+import { MAIN_STYLE } from "@/constants/styles";
 import { addRecipeDatabase } from "@/db/recipe-db";
 import { Ingredient } from "@/recipe/ingredient";
 import { Recipe } from "@/recipe/recipe";
