@@ -1,4 +1,6 @@
+import { getColorScheme } from "@/constants/color-scheme";
 import { MAIN_STYLE } from "@/constants/styles";
+import AntDesign from '@expo/vector-icons/AntDesign';
 import { PropsWithChildren, useState } from "react";
 import { StyleSheet, TextInput, View } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
@@ -21,6 +23,8 @@ export default function InstructionForm({position, initialText, placeholder, tra
     const [inputHeight, setInputHeight] = useState(0);
     const [text, setText] = useState<string>(initialText);
 
+    const colorScheme = getColorScheme();
+
     let prevHeight = inputHeight;
 
     const drag = Gesture.Pan().onChange((event) => {
@@ -41,7 +45,7 @@ export default function InstructionForm({position, initialText, placeholder, tra
 
     return <Animated.View style={[style.view, viewStyle, {height: inputHeight}]}>
         <TextInput
-            style={[style.textInput,{height: inputHeight}]}
+            style={[style.textInput,{height: inputHeight, backgroundColor:colorScheme.surfaceContainerHigh}]}
             placeholder={placeholder}
             value = {text}
             textAlignVertical="top"
@@ -61,7 +65,9 @@ export default function InstructionForm({position, initialText, placeholder, tra
             }}
             />
         {moveable && <GestureDetector gesture={drag}>
-            <View style={[MAIN_STYLE.rearrange,{height: inputHeight}]}/>
+            <View style={[MAIN_STYLE.rearrange,{height: inputHeight}]}>
+                <AntDesign name="holder" size={24} color={colorScheme.onSecondary}/>
+            </View>
         </GestureDetector>}
     </Animated.View>
 }
@@ -79,5 +85,6 @@ export const style = StyleSheet.create({
     view:{
         flex: 1,
         flexDirection: 'row',
+        fontFamily:"Body"
     }
 })

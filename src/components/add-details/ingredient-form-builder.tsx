@@ -3,7 +3,7 @@ import { IngredientPair } from "@/app/(tabs)/add/details";
 import { INGREDIENT_HEIGHT } from "@/constants/constants";
 import { Ingredient } from "@/recipe/ingredient";
 import { Measurement } from "@/recipe/measurement";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { useSharedValue } from "react-native-reanimated";
 import IngredientForm from "./ingredient-form";
@@ -21,7 +21,7 @@ export default function IngredientFromBuilder(props: Props){
 
     const keyCounter = useRef(0);
 
-    const selectedInstruction = useSharedValue(-1);
+    const [selectedInstruction, setSelectedInstruction] = useState(-1);
     const translateY = useSharedValue(Array(ingredients.length).fill(0));
     const lowerBound = useSharedValue(0);
     const upperBound = useSharedValue(0);
@@ -63,11 +63,11 @@ export default function IngredientFromBuilder(props: Props){
     }
 
     const select = (position:number) => {
-        if (selectedInstruction.value > 0){
+        if (selectedInstruction > 0){
             return;
         }
         
-        selectedInstruction.value = position;
+        setSelectedInstruction(position);
         shiftAmount.value = 0;
 
         let lower =  - position * (INGREDIENT_HEIGHT + INGREDIENT_GAP);
@@ -167,7 +167,7 @@ export default function IngredientFromBuilder(props: Props){
     }
 
     const finalize = (position: number) => {
-        if (selectedInstruction.value !== position){
+        if (selectedInstruction !== position){
             return;
         }
         
@@ -192,14 +192,14 @@ export default function IngredientFromBuilder(props: Props){
 
         setIngredients(newInstructions)
 
-        selectedInstruction.value = -1;
+        setSelectedInstruction(-1);
     }
 
 
     return <View style={style.view}>
         {
             ingredients.map((value, index) => {  
-                return <View key={value.key} style = {style.step}>
+                return <View key={value.key} style={{zIndex: (selectedInstruction === index)?1:0}}>
                     <IngredientForm 
                         position={index} 
                         initialQuantity={value.ingredient.quantity.toString()} 
@@ -221,9 +221,6 @@ export default function IngredientFromBuilder(props: Props){
 export const style = StyleSheet.create({
     view:{
         gap: INGREDIENT_GAP,
-    },
-    step:{
-        flexDirection: 'row',
-        gap: 10
+        //position: 'absolute'
     }
 })

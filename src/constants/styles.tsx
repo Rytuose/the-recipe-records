@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import { getColorScheme } from "./color-scheme";
 
 export const MAIN_STYLE = StyleSheet.create({
   container: {
@@ -7,7 +8,8 @@ export const MAIN_STYLE = StyleSheet.create({
     justifyContent: "flex-start",
     flexDirection: "column",
     gap: 20,
-    marginTop: 30,
+    paddingTop: 30,
+    backgroundColor: getColorScheme().background,
   },
   scrollContainer: {
     flex: 1,
@@ -15,6 +17,7 @@ export const MAIN_STYLE = StyleSheet.create({
     justifyContent: "flex-start",
     flexDirection: "column",
     gap: 20,
+    backgroundColor: getColorScheme().background,
   },
   link: {
     fontSize: 20,
@@ -22,7 +25,9 @@ export const MAIN_STYLE = StyleSheet.create({
     color: "blue"
   },
   rearrange: {
-    width: 60,
-    backgroundColor: '#123456'
+    width: 35,
+    backgroundColor: getColorScheme().secondary,
+    alignItems: 'center',
+    justifyContent: 'center'
   }
 });

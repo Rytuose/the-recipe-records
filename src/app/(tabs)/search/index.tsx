@@ -30,7 +30,7 @@ export default function SearchScreen() {
   );
 
   return (
-    <View style={MAIN_STYLE.container}>
+    <View style={[MAIN_STYLE.container,{paddingTop: 10, gap: 10}]}>
       <Text style={style.title}>Search Recipes</Text>
       <RecipeSearchBar/>
       <RecipeScrollView recipies={recipies}/>
@@ -41,6 +41,7 @@ export default function SearchScreen() {
 export const style = StyleSheet.create({
   title:{
     fontSize: 50,
-    textAlign: "center"
+    textAlign: "center",
+    fontFamily: "Title"
   }
 })

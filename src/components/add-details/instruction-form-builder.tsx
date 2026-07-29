@@ -1,6 +1,6 @@
 import { InstructionPair } from "@/app/(tabs)/add/details";
 import { INSTRUCTION_FORM_STARTING_HEIGHT } from "@/constants/constants";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useSharedValue } from "react-native-reanimated";
@@ -19,7 +19,8 @@ export default function InstructionFormBuilder(props: Props){
 
     const keyCounter = useRef(0);
 
-    const selectedInstruction = useSharedValue(-1);
+    const [selectedInstruction, setSelectedInstruction] = useState(-1);
+    //const selectedInstruction = useSharedValue(-1);
     const translateY = useSharedValue(Array(instructions.length).fill(0));
     const lowerBound = useSharedValue(0);
     const upperBound = useSharedValue(0);
@@ -53,11 +54,11 @@ export default function InstructionFormBuilder(props: Props){
 
     const select = (position:number) => {
         
-        if (selectedInstruction.value > 0){
+        if (selectedInstruction > 0){
             return;
         }
         
-        selectedInstruction.value = position;
+        setSelectedInstruction(position);
         shiftAmount.value = 0;
 
         let totalHeight = INSTRUCTION_GAP * (instructions.length - 2);
@@ -76,7 +77,6 @@ export default function InstructionFormBuilder(props: Props){
         let lower = -startingHeight;
         let upper = totalHeight -startingHeight - instructions[position].height
         
-        //return {lowerBound, upperBound}
         lowerBound.value = lower;
         upperBound.value = upper;
     }
@@ -170,7 +170,7 @@ export default function InstructionFormBuilder(props: Props){
     }
 
     const finalize = (position: number) => {
-        if (selectedInstruction.value !== position){
+        if (selectedInstruction !== position){
             return;
         }
         
@@ -195,13 +195,13 @@ export default function InstructionFormBuilder(props: Props){
 
         setInstructions(newInstructions)
 
-        selectedInstruction.value = -1;
+        setSelectedInstruction(-1);
     }
 
     return <GestureHandlerRootView style={style.gestureView}>
             {
                 instructions.map((value, index) => {
-                    return <View key={value.key} style = {[style.step]}>
+                    return <View key={value.key} style = {[style.step, {zIndex: (selectedInstruction===index)?1:0}]}>
                         {/* <Text style={{fontSize: 16}}>{(index + 1) + "."}</Text> */}
                         <InstructionForm
                             position={index}

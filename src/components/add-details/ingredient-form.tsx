@@ -1,6 +1,8 @@
+import { getColorScheme } from "@/constants/color-scheme";
 import { INGREDIENT_HEIGHT } from "@/constants/constants";
 import { MAIN_STYLE } from "@/constants/styles";
 import { Measurement, MEASUREMENT_NAMES } from "@/recipe/measurement";
+import AntDesign from "@expo/vector-icons/AntDesign";
 import { useRef, useState } from "react";
 import { StyleSheet, TextInput, View } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
@@ -24,12 +26,11 @@ type Props = {
 export default function IngredientForm({position, initialQuantity, initialMeasurement, initialIngredient, translateY, moveable,  select, shift, finalize, update}: Props){
     
     const [quantity, setQuantity] = useState<string>(initialQuantity);
-
     const measurement = useRef<Measurement>(initialMeasurement);
     const [measurementText, setMeasurementText] = useState<string>(initialMeasurement);
-
     const [ingredient, setIngredient] = useState<string>(initialIngredient);
 
+    const colorScheme = getColorScheme();
 
     const drag = Gesture.Pan().onChange((event) => {
             shift(position, event.changeY);
@@ -39,7 +40,7 @@ export default function IngredientForm({position, initialQuantity, initialMeasur
             select(position);
         })
 
-    const viewStyle = useAnimatedStyle(() => {
+    const viewStyle = useAnimatedStyle(() => {  
         return {
             transform:[{
                 translateY: translateY.value[position]
@@ -49,7 +50,7 @@ export default function IngredientForm({position, initialQuantity, initialMeasur
 
     return <Animated.View style={[style.view, viewStyle]}>
         <TextInput 
-            style={style.number}
+            style={[style.number, {backgroundColor:colorScheme.surfaceContainerHigh}]}
             keyboardType="numeric"
             placeholder="Quantity"
             value = {(quantity === '-1')? "" : quantity}
@@ -67,7 +68,7 @@ export default function IngredientForm({position, initialQuantity, initialMeasur
         />
         {/*TODO: Change to a search bar + dropdown hybrid with additional mappings*/}
         <TextInput 
-            style={style.measurement}
+            style={[style.measurement,{backgroundColor:colorScheme.surfaceContainerHigh}]}
             placeholder="Measurement"
             value={measurementText}
             onChangeText={setMeasurementText}
@@ -94,7 +95,7 @@ export default function IngredientForm({position, initialQuantity, initialMeasur
         />
         <View style={{flexDirection: 'row', flex: 1}}>
             <TextInput
-                style={style.ingredient}
+                style={[style.ingredient, {backgroundColor:colorScheme.surfaceContainerHigh}]}
                 placeholder="Ingredient"
                 value = {ingredient}
                 onChangeText={setIngredient}
@@ -103,7 +104,9 @@ export default function IngredientForm({position, initialQuantity, initialMeasur
                 }}
             />
             {moveable && <GestureDetector gesture={(drag)}>
-                <View style={[MAIN_STYLE.rearrange,{height: INGREDIENT_HEIGHT}]}/>
+                <View style={[MAIN_STYLE.rearrange,{height: INGREDIENT_HEIGHT}]}>
+                    <AntDesign name="holder" size={24} color={colorScheme.onPrimary}/>
+                </View>
             </GestureDetector>}
         </View>
     </Animated.View>
@@ -113,24 +116,29 @@ export const style = StyleSheet.create({
     view:{
         width: '100%',
         flexDirection: 'row',
-        gap: 10
+        gap: 10,
+        //position: 'absolute'
+
     },
     number:{
         width: '15%',
         borderWidth: 2,
         height: INGREDIENT_HEIGHT,
         padding: 5,
+        fontFamily:"Body"
     },
     measurement: {
         width: '25%',
         borderWidth: 2,
         height: INGREDIENT_HEIGHT,
         padding: 5,
+        fontFamily:"Body",
     },
     ingredient:{
         borderWidth: 2,
         height: INGREDIENT_HEIGHT,
         padding: 5,
+        fontFamily:"Body",
         flex: 1
     }
 })

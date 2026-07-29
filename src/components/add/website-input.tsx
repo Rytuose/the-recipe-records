@@ -1,8 +1,11 @@
-import { StyleSheet, TextInput } from "react-native"
+import { getColorScheme } from "@/constants/color-scheme";
+import { StyleSheet, TextInput } from "react-native";
 
 export default function WebsiteInput(){
+  const colorScheme = getColorScheme();
+
   return <TextInput
-    style={style.textInput}
+    style={[style.textInput, {backgroundColor:colorScheme.surfaceContainerHigh}]}
     defaultValue=""
     placeholder="Link Here"
   />
@@ -16,6 +19,7 @@ export const style = StyleSheet.create({
     borderColor: "#000000",
     borderWidth: 3,
     fontSize: 20,
-    padding: 20
+    padding: 20,
+    fontFamily: "Body"
   }
 })
