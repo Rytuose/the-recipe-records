@@ -1,10 +1,6 @@
 import { StyleSheet } from "react-native";
 import { getColorScheme } from "./color-scheme";
 
-export const DETAIL_HORIZONTAL_MARGIN = 15;
-
-export const BOTTOM_NAV_BAR_HEIGHT = 60;
-
 export const MAIN_STYLE = StyleSheet.create({
   container: {
     flex: 1,
@@ -28,4 +24,10 @@ export const MAIN_STYLE = StyleSheet.create({
     textDecorationLine: 'underline',
     color: "blue"
   },
+  rearrange: {
+    width: 35,
+    backgroundColor: getColorScheme().secondary,
+    alignItems: 'center',
+    justifyContent: 'center'
+  }
 });

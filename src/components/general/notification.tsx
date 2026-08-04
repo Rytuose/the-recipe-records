@@ -1,4 +1,4 @@
-import { BOTTOM_NAV_BAR_HEIGHT } from "@/constants/styles";
+import { BOTTOM_NAV_BAR_HEIGHT } from "@/constants/constants";
 import { StyleSheet, Text, View } from "react-native";
 
 type Props = {
@@ -20,7 +20,6 @@ export const style = StyleSheet.create({
   notification:{
     minHeight: 40,
     backgroundColor:'#df9090',
-    //pointerEvents: 'none',
     zIndex: 999,
     position: 'absolute',
     bottom: BOTTOM_NAV_BAR_HEIGHT + 10,

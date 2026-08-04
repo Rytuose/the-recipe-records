@@ -14,7 +14,6 @@ export default function Index() {
   return <Redirect href="/add" />;
 }
 
-// TODO: Try-catch the system
 async function StartUp(notification:(text:string)=>void){
   try {
     //await deleteDatabase(); // For testing purposes

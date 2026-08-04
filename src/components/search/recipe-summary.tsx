@@ -1,15 +1,12 @@
 
 import { NotificationContext } from '@/app/_layout';
 import { getColorScheme } from '@/constants/color-scheme';
+import { RECIPE_SUMMARY_WIDTH } from '@/constants/constants';
 import { RecipeSummaryDetail } from '@/recipe/recipe';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { router } from "expo-router";
 import { useContext, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-
-//const { width: SCREEN_WIDTH } = Dimensions.get('window');
-
-export const RECIPE_SUMMARY_WIDTH = 460;
 
 const RECIPE_SUMMARY_HEIGHT = 150;
 const BORDER_WIDTH = 4;
@@ -31,11 +28,6 @@ export default function RecipeSummary({summary}:Props){
 
 
     const recipeClick = async () => {
-        // const recipe = await getRecipeById(summary.id)
-        // if(recipe === null){
-        //     notificationUpdate("Couldn't open recipe");
-        //     return;
-        // }
         router.navigate({pathname: "/search/details", params:{id:summary.id}});
     }
 

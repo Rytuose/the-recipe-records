@@ -5,7 +5,8 @@ import ImageDisplay from "@/components/details/image-display";
 import ButtonWrapper from "@/components/general/button-wrapper";
 import Category from "@/components/general/category";
 import { getColorScheme } from "@/constants/color-scheme";
-import { DETAIL_HORIZONTAL_MARGIN, MAIN_STYLE } from "@/constants/styles";
+import { DETAIL_HORIZONTAL_MARGIN, INSTRUCTION_FORM_STARTING_HEIGHT } from "@/constants/constants";
+import { MAIN_STYLE } from "@/constants/styles";
 import { addRecipeDatabase } from "@/db/recipe-db";
 import { Ingredient } from "@/recipe/ingredient";
 import { Recipe } from "@/recipe/recipe";
@@ -23,6 +24,7 @@ export type IngredientPair = {
 export type InstructionPair = {
     instruction: string
     key: number
+    height: number
 }
 
 export default function AddDetailScreen() {
@@ -34,7 +36,7 @@ export default function AddDetailScreen() {
   const [title, setTitle] = useState<string>("Food Name?");
   const [titleEditable, setTitleEditable] = useState<boolean>(false);
   const [ingredients, setIngredients] = useState<IngredientPair[]>([{ingredient: new Ingredient(), key: 0}]);
-  const [instructions, setInstructions] = useState<InstructionPair[]>([{instruction: "", key: 0}]);
+  const [instructions, setInstructions] = useState<InstructionPair[]>([{instruction: "", key: 0, height: INSTRUCTION_FORM_STARTING_HEIGHT}]);
   const {width} = useWindowDimensions();
   const notificationUpdate = useContext(NotificationContext);
   const colorScheme = getColorScheme();

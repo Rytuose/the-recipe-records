@@ -1,6 +1,7 @@
+import { RECIPE_SUMMARY_WIDTH } from "@/constants/constants";
 import { RecipeSummaryDetail } from "@/recipe/recipe";
 import { FlatList, StyleSheet, useWindowDimensions } from "react-native";
-import RecipeSummary, { RECIPE_SUMMARY_WIDTH } from "./recipe-summary";
+import RecipeSummary from "./recipe-summary";
 
 const GAP = 10;
 const MARGIN = 15;

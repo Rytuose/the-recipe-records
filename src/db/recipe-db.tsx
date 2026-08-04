@@ -1,5 +1,5 @@
 import { Ingredient } from '@/recipe/ingredient';
-import { MEASUREMENT_NAMES } from '@/recipe/measurement';
+import { baselineToMeasurement, measurementToBaseline } from '@/recipe/measurement';
 import { Recipe, RecipeSummaryDetail } from '@/recipe/recipe';
 import * as SQLite from 'expo-sqlite';
 
@@ -56,6 +56,8 @@ export async function initDatabase(){
             FOREIGN KEY (recipe_id) REFERENCES recipes(recipe_id) ON DELETE CASCADE
         );
 
+        CREATE INDEX IF NOT EXISTS recipe_summary_index ON recipes(date_updated, recipe_id, recipe_name, cooking_time, starred);
+
     `);
 
     console.log("Setting up statements");
@@ -64,7 +66,6 @@ export async function initDatabase(){
 }
 
 export async function deleteDatabase(){
-        await SQLite.deleteDatabaseAsync('databaseName');
     await SQLite.deleteDatabaseAsync(DATABASE_NAME)
 }
 
@@ -76,6 +77,7 @@ export async function addRecipeDatabase(recipe:Recipe){
         updateRecipeDatabase(recipe);
         return;
     }
+    
 
     let result = await db.runAsync(`INSERT INTO recipes (recipe_name, website, cooking_time, date_updated, author, starred, instructions, images) 
         VALUES ($recipe_name, $website, $cooking_time, $date_updated, $author, $starred, $instructions, $images)`,
@@ -86,8 +88,8 @@ export async function addRecipeDatabase(recipe:Recipe){
             $date_updated: Date.now(),
             $author: recipe.author,
             $starred: recipe.starred?1:0,
-            $instructions: recipe.instructions.reduce((prev, current) => prev + '\n' + current, "").trim(),
-            $images: recipe.images.reduce((prev, current) => prev + '\n' + current, "").trim()
+            $instructions: JSON.stringify(recipe.instructions),
+            $images: JSON.stringify(recipe.images),
         })
     
     const newId = result.lastInsertRowId
@@ -122,7 +124,7 @@ export async function addRecipeDatabase(recipe:Recipe){
             await recipeIngredientInsert.executeAsync({
                 $ingredient_name: value.name,
                 $recipe_id: newId,
-                $amount: value.quantity,
+                $amount: measurementToBaseline(value.measurement, value.quantity),
                 $display_unit: value.measurement
             })
 
@@ -144,6 +146,11 @@ async function updateRecipeDatabase(recipe:Recipe){
 
 }
 
+export async function deleteRecipeDatabase(id:number){
+    await dbCheck();
+    await db.runAsync(`DELETE FROM recipes WHERE recipe_id = $recipe_id`,{$recipe_id: id})
+}
+
 export async function getRecipies(){
     await dbCheck();
 
@@ -159,8 +166,6 @@ export async function getRecipies(){
     let count = 0;
 
     for (const row of result){
-        console.log(row.recipe_id + " " + row.recipe_name + " " + row.cooking_time + " " + row.starred);
-
         recipies[count] = {
             id: row.recipe_id,
             name: row.recipe_name,
@@ -176,6 +181,8 @@ export async function getRecipies(){
 }
 
 export async function getRecipeById(id:number){
+    await dbCheck();
+    
     const recipe = new Recipe();
     console.log("Getting recipe with id " + id);
 
@@ -201,10 +208,9 @@ export async function getRecipeById(id:number){
     recipe.website = result!.website;
     recipe.cooking_time = result!.cooking_time;
     recipe.author = result!.author;
-    recipe.instructions = (result!.instructions === "")?[]:result!.instructions.split("\n")
-    recipe.images = (result!.images)?[]:result!.images.split("\n")
+    recipe.instructions = JSON.parse(result!.instructions)
+    recipe.images = JSON.parse(result!.images)
 
-    //TODO Fill ingredients
     let ingredientResult:{
         ingredient_name: string,
         amount: number,
@@ -218,15 +224,9 @@ export async function getRecipeById(id:number){
     for (const ingr of ingredientResult){
         const ingredient = new Ingredient();
         ingredient.name = ingr.ingredient_name;
-        ingredient.quantity = ingr.amount;
+        ingredient.quantity = baselineToMeasurement(ingr.display_unit, ingr.amount),
+        ingredient.measurement = ingr.display_unit;
 
-        //TODO: Maybe binary search this
-        for (const options of MEASUREMENT_NAMES){
-            if (options === ingr.display_unit){
-                ingredient.measurement = ingr.display_unit
-                break
-            }
-        }
         recipe.ingredients.push(ingredient);
     }
     

@@ -13,7 +13,6 @@ export default function Category({editable, categoryAdd}: Prop){
 
     const colorScheme = getColorScheme();
 
-    // Might need to be async
     const deleteCategory = () => {
         
     }
@@ -42,7 +41,6 @@ export const style = StyleSheet.create({
         height: 30,
         borderRadius: 25,
         borderColor: "black",
-        //borderWidth: 3,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
