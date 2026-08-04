@@ -20,7 +20,6 @@ export default function InstructionFormBuilder(props: Props){
     const keyCounter = useRef(0);
 
     const [selectedInstruction, setSelectedInstruction] = useState(-1);
-    //const selectedInstruction = useSharedValue(-1);
     const translateY = useSharedValue(Array(instructions.length).fill(0));
     const lowerBound = useSharedValue(0);
     const upperBound = useSharedValue(0);
@@ -222,7 +221,6 @@ export default function InstructionFormBuilder(props: Props){
 export const style = StyleSheet.create({
     gestureView:{
         gap: INSTRUCTION_GAP,
-        //backgroundColor: '#94bde6'
     },
     step:{
         flexDirection: 'row',

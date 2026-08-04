@@ -20,7 +20,6 @@ export const style = StyleSheet.create({
   notification:{
     minHeight: 40,
     backgroundColor:'#df9090',
-    //pointerEvents: 'none',
     zIndex: 999,
     position: 'absolute',
     bottom: BOTTOM_NAV_BAR_HEIGHT + 10,

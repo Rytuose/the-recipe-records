@@ -7,12 +7,12 @@ import RecipeStepBuilder from "@/components/search-details/recipe-step-builder";
 import { getColorScheme } from "@/constants/color-scheme";
 import { DETAIL_HORIZONTAL_MARGIN } from "@/constants/constants";
 import { MAIN_STYLE } from "@/constants/styles";
-import { getRecipeById } from "@/db/recipe-db";
+import { deleteRecipeDatabase, getRecipeById } from "@/db/recipe-db";
 import { Recipe } from "@/recipe/recipe";
 import Feather from "@expo/vector-icons/Feather";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { Stack, useFocusEffect, useLocalSearchParams } from "expo-router";
-import { useCallback, useContext, useEffect, useState } from "react";
+import { router, Stack, useFocusEffect, useLocalSearchParams } from "expo-router";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { ScrollView, StyleSheet, Text, useWindowDimensions, View } from "react-native";
 
 
@@ -23,6 +23,10 @@ export default function DetailScreen() {
   const {width} = useWindowDimensions();
   const recipeId = useLocalSearchParams().id;
   const [recipe, setRecipe] = useState<Recipe|null>(null);
+  const [selectedServingIndex, setSelectedServingIndex] = useState<number>(1);
+  const [multipliers, setMultipliers] = useState<number[]>([.5,1,2,1]);
+  const servingOptions = useRef(["0.5x", "1x", "2x", "Custom"]);
+
   const colorScheme = getColorScheme();
 
   if(recipeId === undefined || !(typeof(recipeId) === "string")){
@@ -30,10 +34,8 @@ export default function DetailScreen() {
     return <></>
   }
 
-
   useFocusEffect(
     useCallback(() => {
-
       const getData = async () => {
         const queriedRecipe = await getRecipeById( Number.parseInt(recipeId));
         if(queriedRecipe === null){
@@ -42,11 +44,7 @@ export default function DetailScreen() {
         }
         setRecipe(queriedRecipe);
       }
-
       getData();
-
-      console.log("Opened Detail Screen");
-
     }, [])
   )
 
@@ -58,10 +56,30 @@ export default function DetailScreen() {
 
   }
 
-  const onDelete = () => {
-
+  const onDelete = async () => {
+    console.log("On Delete");
+    try{
+      await deleteRecipeDatabase(Number.parseInt(recipeId));
+      router.navigate("/search");
+      //throw("Test Error");
+    }
+    catch(e){
+      notificationUpdate("Error: " + e);
+    }
+    
   }
 
+  const onCustomChange = (value:number)=>{
+    let newMulitpliers = multipliers.map((val, index) => {
+      if(index === multipliers.length - 1){
+        return value;
+      }
+      return val;
+    })
+    setMultipliers(newMulitpliers);
+  }
+
+  let portion = multipliers[selectedServingIndex];
 
   return (
     <>
@@ -96,11 +114,18 @@ export default function DetailScreen() {
             </ButtonWrapper>
           </View>
           <View style={{marginHorizontal: DETAIL_HORIZONTAL_MARGIN}}>
-            <SegmentedButton options={["0.5x", "1x", "2x", "Custom"]}/>
+            <SegmentedButton
+              options={servingOptions.current} 
+              selectedIndex={selectedServingIndex} 
+              lastCustom={true}
+              fallbackIndex={1}
+              onIndexChange={setSelectedServingIndex}
+              onCustomChange={onCustomChange}
+            />
           </View>
           <View style={style.section}>
             <Text style={style.subtitle}>Ingredients</Text>
-            <RecipeStepBuilder recipeSteps={recipe.ingredients.map(val => val.toString())}/>
+            <RecipeStepBuilder recipeSteps={recipe.ingredients.map(val => val.toString(portion))}/>
           </View>
           <View style={style.section}>
             <Text style={style.subtitle}>Instructions</Text>

@@ -2,7 +2,6 @@
 import { IngredientPair } from "@/app/(tabs)/add/details";
 import { INGREDIENT_HEIGHT } from "@/constants/constants";
 import { Ingredient } from "@/recipe/ingredient";
-import { Measurement } from "@/recipe/measurement";
 import { useRef, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { useSharedValue } from "react-native-reanimated";
@@ -27,7 +26,7 @@ export default function IngredientFromBuilder(props: Props){
     const upperBound = useSharedValue(0);
     const shiftAmount = useSharedValue(0);
     
-    const updateIngredient = (position: number, quantity: string, measurement: Measurement, ingredientName: string) => {
+    const updateIngredient = (position: number, quantity: string, measurement: string, ingredientName: string) => {
         const ingredient = ingredients[position].ingredient;
         const quantityInteger = parseFloat(quantity);
         
@@ -221,6 +220,5 @@ export default function IngredientFromBuilder(props: Props){
 export const style = StyleSheet.create({
     view:{
         gap: INGREDIENT_GAP,
-        //position: 'absolute'
     }
 })

@@ -1,16 +1,14 @@
-import { Measurement } from "./measurement";
 
 export class Ingredient{
     name: string = "";
     quantity: number = -1;
-    measurement: Measurement = "";
+    measurement: string = "";
 
-    toString(){
-        let str = this.quantity.toString();
+    toString(portion:number = 1){
+        let str = (this.quantity === -1)? "":parseFloat((this.quantity*portion).toFixed(4));
         if(this.measurement !== ""){
             str += " " + this.measurement
         }
         return str + " " + this.name;
-
     }
 }

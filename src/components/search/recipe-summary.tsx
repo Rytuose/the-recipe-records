@@ -8,8 +8,6 @@ import { router } from "expo-router";
 import { useContext, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
-//const { width: SCREEN_WIDTH } = Dimensions.get('window');
-
 const RECIPE_SUMMARY_HEIGHT = 150;
 const BORDER_WIDTH = 4;
 const PADDING = 15;
@@ -30,11 +28,6 @@ export default function RecipeSummary({summary}:Props){
 
 
     const recipeClick = async () => {
-        // const recipe = await getRecipeById(summary.id)
-        // if(recipe === null){
-        //     notificationUpdate("Couldn't open recipe");
-        //     return;
-        // }
         router.navigate({pathname: "/search/details", params:{id:summary.id}});
     }
 

@@ -49,7 +49,6 @@ export const style = StyleSheet.create({
     lineHeight: 115,
     textAlign: "center",
     fontFamily: "Title"
-    //color: ThemeColors.coreColors.primary
   },
   subtitle:{
     fontSize: 45,
