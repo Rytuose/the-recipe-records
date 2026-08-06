@@ -2,7 +2,7 @@ import { getColorScheme } from "@/constants/color-scheme";
 import { MAIN_STYLE } from "@/constants/styles";
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { PropsWithChildren, useState } from "react";
-import { StyleSheet, TextInput, View } from "react-native";
+import { StyleSheet, TextInput, useWindowDimensions, View } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, { SharedValue, useAnimatedStyle } from "react-native-reanimated";
 
@@ -26,6 +26,10 @@ export default function InstructionForm({position, initialText, placeholder, tra
     const colorScheme = getColorScheme();
 
     let prevHeight = inputHeight;
+
+    // Causes re-render on window change
+    const {width, height} = useWindowDimensions();
+
 
     const drag = Gesture.Pan().onChange((event) => {
         shift(position, event.changeY);
@@ -57,8 +61,10 @@ export default function InstructionForm({position, initialText, placeholder, tra
                     // Causes a re-trigger with the correct height
                     newHeight = 0;
                 }
+                
                 setInputHeight(newHeight);
                 prevHeight = newHeight;
+                update(position, text, newHeight);
             }}
             onBlur={() => {
                 update(position, text, inputHeight);

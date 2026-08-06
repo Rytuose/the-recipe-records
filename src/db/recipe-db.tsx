@@ -143,7 +143,8 @@ export async function addRecipeDatabase(recipe:Recipe){
 }
 
 async function updateRecipeDatabase(recipe:Recipe){
-
+    console.log("Updating Recipe");
+    
 }
 
 export async function deleteRecipeDatabase(id:number){

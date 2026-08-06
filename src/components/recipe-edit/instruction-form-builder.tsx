@@ -1,10 +1,10 @@
-import { InstructionPair } from "@/app/(tabs)/add/details";
 import { INSTRUCTION_FORM_STARTING_HEIGHT } from "@/constants/constants";
 import { useRef, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useSharedValue } from "react-native-reanimated";
 import InstructionForm from "./instruction-form";
+import { InstructionPair } from "./recipe-editor";
 
 type Props = {
     instructions: InstructionPair[],
@@ -17,7 +17,7 @@ export default function InstructionFormBuilder(props: Props){
 
     const {instructions, setInstructions} = props;
 
-    const keyCounter = useRef(0);
+    const keyCounter = useRef(instructions.length);
 
     const [selectedInstruction, setSelectedInstruction] = useState(-1);
     const translateY = useSharedValue(Array(instructions.length).fill(0));
@@ -27,7 +27,7 @@ export default function InstructionFormBuilder(props: Props){
     
 
     const updateInstruction = (position: number, value: string, height: number) => {
-        if(value !== instructions[position].instruction){
+        if(value !== instructions[position].instruction || height !== instructions[position].height){
 
             let newInstructions = instructions.map((val, index) => {
                 if(index === position){
