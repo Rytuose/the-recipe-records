@@ -12,6 +12,7 @@ import { Ingredient } from "@/recipe/ingredient";
 import { Recipe } from "@/recipe/recipe";
 import Feather from "@expo/vector-icons/Feather";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { router, Stack } from "expo-router";
 import { useContext, useRef, useState } from "react";
 import { ScrollView, StyleSheet, Text, TextInput, useWindowDimensions, View } from "react-native";
@@ -28,10 +29,11 @@ export type InstructionPair = {
 }
 
 export type Props = {
-    recipe:Recipe;
+    recipe:Recipe,
+    isUpdate:boolean
 }
 
-export default function RecipeEditor({recipe}:Props) {
+export default function RecipeEditor({recipe, isUpdate}:Props) {
 
   const website = recipe.website;
   const author = recipe.author;
@@ -56,7 +58,7 @@ export default function RecipeEditor({recipe}:Props) {
     textInputRef.current?.focus();
   }
 
-  const addRecipe = () => {
+  const addRecipe = async () => {
     //const recipe = new Recipe();
 
     const ingredientStrings = new Array<Ingredient>(ingredients.length-1); 
@@ -80,7 +82,7 @@ export default function RecipeEditor({recipe}:Props) {
     recipe.instructions = instructionStrings;
 
     try{
-      addRecipeDatabase(recipe);
+      await addRecipeDatabase(recipe);
       notificationUpdate("Successfully saved recipe")
     }
     catch(e){
@@ -153,8 +155,10 @@ export default function RecipeEditor({recipe}:Props) {
               <Ionicons name="close" size={24} color={colorScheme.onTertiary}/>
             </ButtonWrapper>
             <ButtonWrapper width={'40%'} onPress={addRecipe} backgroundColor={colorScheme.primary}>
-              <Text style={[style.buttonText, {color:colorScheme.onPrimary}]}>Add Recipe</Text>
-              <Ionicons name="add" size={24} color={colorScheme.onPrimary}/>
+              {!isUpdate && <Text style={[style.buttonText, {color:colorScheme.onPrimary}]}>Add Recipe</Text>}
+              {!isUpdate && <Ionicons name="add" size={24} color={colorScheme.onPrimary}/>}
+              {isUpdate && <Text style={[style.buttonText, {color:colorScheme.onPrimary}]}>Update</Text>}
+              {isUpdate && <MaterialCommunityIcons name="update" size={26} color={colorScheme.onPrimary}/>}
             </ButtonWrapper>
           </View>
         </ScrollView>

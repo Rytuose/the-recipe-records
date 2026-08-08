@@ -8,5 +8,5 @@ export default function EditScreen(){
     const recipeJSON = useLocalSearchParams().recipe as string;
     const recipe = JSON.parse(recipeJSON) as Recipe;
 
-    return <RecipeEditor recipe={recipe}/>
+    return <RecipeEditor recipe={recipe} isUpdate={true}/>
 }
