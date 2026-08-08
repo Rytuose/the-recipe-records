@@ -53,20 +53,23 @@ export default function DetailScreen() {
   }
 
   const onEdit = () => {
+    //router.navigate("/add/details");
+    //router.push("/add/details");
 
+    //Stringify recipe?
+    //console.log(JSON.stringify(recipe));
+    
+    router.navigate({pathname: "/(tabs)/search/edit", params:{recipe: JSON.stringify(recipe)}})
   }
 
   const onDelete = async () => {
-    console.log("On Delete");
     try{
       await deleteRecipeDatabase(Number.parseInt(recipeId));
       router.navigate("/search");
-      //throw("Test Error");
     }
     catch(e){
       notificationUpdate("Error: " + e);
     }
-    
   }
 
   const onCustomChange = (value:number)=>{

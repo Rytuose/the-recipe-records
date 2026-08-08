@@ -1,11 +1,10 @@
-
-import { IngredientPair } from "@/app/(tabs)/add/details";
 import { INGREDIENT_HEIGHT } from "@/constants/constants";
 import { Ingredient } from "@/recipe/ingredient";
 import { useRef, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { useSharedValue } from "react-native-reanimated";
 import IngredientForm from "./ingredient-form";
+import { IngredientPair } from "./recipe-editor";
 
 type Props = {
     ingredients: IngredientPair[]
@@ -18,7 +17,7 @@ export default function IngredientFromBuilder(props: Props){
 
     const {ingredients, setIngredients} = props;
 
-    const keyCounter = useRef(0);
+    const keyCounter = useRef(ingredients.length);
 
     const [selectedInstruction, setSelectedInstruction] = useState(-1);
     const translateY = useSharedValue(Array(ingredients.length).fill(0));

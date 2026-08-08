@@ -51,7 +51,8 @@ export async function initDatabase(){
             recipe_id INTEGER, 
             amount REAL, 
             display_unit TEXT, 
-            PRIMARY KEY (ingredient_name, recipe_id), 
+            position INTEGER,
+            PRIMARY KEY (recipe_id, position), 
             FOREIGN KEY (ingredient_name) REFERENCES ingredients(ingredient_name) ON DELETE NO ACTION, 
             FOREIGN KEY (recipe_id) REFERENCES recipes(recipe_id) ON DELETE CASCADE
         );
@@ -73,13 +74,41 @@ export async function addRecipeDatabase(recipe:Recipe){
     
     await dbCheck();
     
-    if (!Number.isNaN(recipe.id)){
-        updateRecipeDatabase(recipe);
-        return;
-    }
-    
+    let newId = 0;
 
-    let result = await db.runAsync(`INSERT INTO recipes (recipe_name, website, cooking_time, date_updated, author, starred, instructions, images) 
+    if (!Number.isNaN(recipe.id)){
+        await db.runAsync(`UPDATE recipes
+            SET recipe_name = $recipe_name,
+                cooking_time = $cooking_time,
+                date_updated = $date_updated,
+                instructions = $instructions,
+                images = $images
+            WHERE recipe_id = $recipe_id`,
+            {
+                $recipe_id: recipe.id,
+                $recipe_name: recipe.name,
+                //$website: recipe.website,
+                $cooking_time: recipe.cooking_time,
+                $date_updated: Date.now(),
+                //$author: recipe.author,
+                //$starred: recipe.starred?1:0,
+                $instructions: JSON.stringify(recipe.instructions),
+                $images: JSON.stringify(recipe.images),
+            })
+        
+        await db.runAsync(`
+            DELETE 
+            FROM recipe_ingredients
+            WHERE recipe_id = $recipe_id AND position >= $ingredient_count
+        `,{
+            $recipe_id: recipe.id,
+            $ingredient_count: recipe.ingredients.length
+        })
+
+        newId = recipe.id;
+    }
+    else{
+        let result = await db.runAsync(`INSERT INTO recipes (recipe_name, website, cooking_time, date_updated, author, starred, instructions, images) 
         VALUES ($recipe_name, $website, $cooking_time, $date_updated, $author, $starred, $instructions, $images)`,
         {
             $recipe_name: recipe.name,
@@ -92,17 +121,19 @@ export async function addRecipeDatabase(recipe:Recipe){
             $images: JSON.stringify(recipe.images),
         })
     
-    const newId = result.lastInsertRowId
+        newId = result.lastInsertRowId
 
-    console.log("Added recipe with id " + newId);
+        console.log("Added recipe with id " + newId);
+    }
     
     const ingredientCheck = await db.prepareAsync('SELECT COUNT(*) AS ingredient_exists FROM ingredients I WHERE I.ingredient_name = $ingredient_name');
     const ingredientInsert = await db.prepareAsync(`INSERT INTO ingredients VALUES ($ingredient_name)`)
-    const recipeIngredientInsert = await db.prepareAsync(`INSERT INTO recipe_ingredients 
-        VALUES ($ingredient_name, $recipe_id, $amount, $display_unit)`)
+    const recipeIngredientInsert = await db.prepareAsync(`INSERT OR REPLACE INTO recipe_ingredients 
+        VALUES ($ingredient_name, $recipe_id, $amount, $display_unit, $position)`)
 
     try{
 
+        let count = 0;
         for (const value of recipe.ingredients){
             console.log(value.name);
 
@@ -120,13 +151,15 @@ export async function addRecipeDatabase(recipe:Recipe){
 
             console.log("Finished Adding Ingredient");
 
-            //TODO: Uniqueness check on recipe items
             await recipeIngredientInsert.executeAsync({
                 $ingredient_name: value.name,
                 $recipe_id: newId,
                 $amount: measurementToBaseline(value.measurement, value.quantity),
-                $display_unit: value.measurement
+                $display_unit: value.measurement,
+                $position: count
             })
+
+            count++;
 
             console.log("Finished Adding ingredient to recipe");
         }
@@ -139,10 +172,6 @@ export async function addRecipeDatabase(recipe:Recipe){
         await ingredientInsert.finalizeAsync();
         await recipeIngredientInsert.finalizeAsync();
     }
-
-}
-
-async function updateRecipeDatabase(recipe:Recipe){
 
 }
 
@@ -194,7 +223,7 @@ export async function getRecipeById(id:number){
         instructions: string,
         images: string
     }|null = await db.getFirstAsync(`
-        SELECT R.recipe_name, R.website, R.author, R.instructions, R.images
+        SELECT R.recipe_name, R.website, R.cooking_time, R.author, R.instructions, R.images
         FROM recipes R
         WHERE R.recipe_id = $recipe_id`,
     {$recipe_id: id});
@@ -218,7 +247,8 @@ export async function getRecipeById(id:number){
     }[] = await db.getAllAsync(`
         SELECT R.ingredient_name, R.amount, R.display_unit
         FROM recipe_ingredients R
-        WHERE R.recipe_id = $recipe_id`,
+        WHERE R.recipe_id = $recipe_id
+        ORDER BY R.position ASC`,
     {$recipe_id: id})
 
     for (const ingr of ingredientResult){

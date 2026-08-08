@@ -3,10 +3,10 @@ import { Ingredient } from "./ingredient";
 
 export class Recipe{
     id: number = NaN;
-    name: string = "";
-    website: string = "";
+    name: string = "Food Name?";
+    website: string = "Website";
     cooking_time: number = 0;
-    author: string = "";
+    author: string = "Author";
     starred: boolean = false;
     categories: string[] = [];
     images: string[] = [];
