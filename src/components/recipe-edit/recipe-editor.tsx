@@ -13,6 +13,7 @@ import { Recipe } from "@/recipe/recipe";
 import Feather from "@expo/vector-icons/Feather";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import * as ImagePicker from 'expo-image-picker';
 import { router, Stack } from "expo-router";
 import { useContext, useRef, useState } from "react";
 import { ScrollView, StyleSheet, Text, TextInput, useWindowDimensions, View } from "react-native";
@@ -47,6 +48,7 @@ export default function RecipeEditor({recipe, isUpdate}:Props) {
       return {instruction: value, key: index, height: INSTRUCTION_FORM_STARTING_HEIGHT};
     }),{instruction: "", key: recipe.instructions.length , height: INSTRUCTION_FORM_STARTING_HEIGHT}]);
 
+  const [images, setImages] = useState<(ImagePicker.ImagePickerAsset | null)[]>([null]) 
   const textInputRef = useRef<TextInput>(null);
   const [titleEditable, setTitleEditable] = useState<boolean>(false);
   const {width} = useWindowDimensions();
@@ -140,7 +142,7 @@ export default function RecipeEditor({recipe, isUpdate}:Props) {
             <Category editable={true}/>
             <Category categoryAdd={true}/>
           </View>
-          <ImageDisplay/>
+          <ImageDisplay images={images} setImages={setImages} editable={true}/>
           <View style={style.section}>
             <Text style={style.subtitle}>Ingredients (1x)</Text>
             <IngredientFormBuilder ingredients={ingredients} setIngredients={setIngredients}/>
