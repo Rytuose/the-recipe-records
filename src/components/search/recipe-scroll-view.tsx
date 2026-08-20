@@ -7,10 +7,10 @@ const GAP = 10;
 const MARGIN = 15;
 
 type Props = {
-  recipies: RecipeSummaryDetail[]
+  recipes: RecipeSummaryDetail[]
 }
 
-export default function RecipeScrollView({recipies}:Props){
+export default function RecipeScrollView({recipes}:Props){
 
     const {width} = useWindowDimensions();
     
@@ -25,7 +25,7 @@ export default function RecipeScrollView({recipies}:Props){
             contentContainerStyle = {style.containerStyle}
             columnWrapperStyle = {(columnCount > 1)?style.wrapperStyle:undefined}
             numColumns={columnCount}
-            data = {recipies}
+            data = {recipes}
             renderItem={({item}) => {     
                 return <RecipeSummary summary={item}/>
             }}

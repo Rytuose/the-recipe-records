@@ -7,7 +7,7 @@ import RecipeStepBuilder from "@/components/search-details/recipe-step-builder";
 import { getColorScheme } from "@/constants/color-scheme";
 import { DETAIL_HORIZONTAL_MARGIN } from "@/constants/constants";
 import { MAIN_STYLE } from "@/constants/styles";
-import { deleteRecipeDatabase, getRecipeById } from "@/db/recipe-db";
+import { deleteRecipe, getRecipeById } from "@/db/recipe-db";
 import { Recipe } from "@/recipe/recipe";
 import Feather from "@expo/vector-icons/Feather";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -64,7 +64,7 @@ export default function DetailScreen() {
 
   const onDelete = async () => {
     try{
-      await deleteRecipeDatabase(Number.parseInt(recipeId));
+      await deleteRecipe(Number.parseInt(recipeId));
       router.navigate("/search");
     }
     catch(e){

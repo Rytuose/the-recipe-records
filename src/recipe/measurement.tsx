@@ -65,6 +65,9 @@ export function measurementToBaseline(measurement:string, value:number){
 }
 
 export function baselineToMeasurement(measurement:string, value:number){
+    console.log("Converting " + value);
+    
+
     if(value === -1){
         return -1;
     }
