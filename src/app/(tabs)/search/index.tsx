@@ -2,7 +2,7 @@
 import RecipeScrollView from "@/components/search/recipe-scroll-view";
 import RecipeSearchBar from "@/components/search/recipe-search-bar";
 import { MAIN_STYLE } from "@/constants/styles";
-import { getRecipies } from "@/db/recipe-db";
+import { getRecipes } from "@/db/recipe-db";
 import { RecipeSummaryDetail } from "@/recipe/recipe";
 import { useFocusEffect } from "expo-router";
 import { useCallback, useState } from "react";
@@ -11,13 +11,13 @@ import { StyleSheet, Text, View } from "react-native";
 export default function SearchScreen() {
 
   
-  const [recipies, setRecipies] = useState<RecipeSummaryDetail[]>([]);
+  const [recipes, setRecipes] = useState<RecipeSummaryDetail[]>([]);
 
   useFocusEffect(
     useCallback(() => {
       const getData = async () => {
-        const queriedRecipies = await getRecipies();
-        setRecipies(queriedRecipies);
+        const queriedRecipes = await getRecipes();
+        setRecipes(queriedRecipes);
       };
 
       getData();
@@ -33,7 +33,7 @@ export default function SearchScreen() {
     <View style={[MAIN_STYLE.container,{paddingTop: 10, gap: 10}]}>
       <Text style={style.title}>Search Recipes</Text>
       <RecipeSearchBar/>
-      <RecipeScrollView recipies={recipies}/>
+      <RecipeScrollView recipes={recipes}/>
     </View>
   );
 }

@@ -16,6 +16,7 @@ export default function Index() {
 
 async function StartUp(notification:(text:string)=>void){
   try {
+    //await deleteDatabaseMobile();
     //await deleteDatabase(); // For testing purposes
     await initDatabase();
   }
