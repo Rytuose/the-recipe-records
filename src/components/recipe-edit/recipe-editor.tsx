@@ -7,7 +7,7 @@ import InstructionFormBuilder from "@/components/recipe-edit/instruction-form-bu
 import { getColorScheme } from "@/constants/color-scheme";
 import { DETAIL_HORIZONTAL_MARGIN, INSTRUCTION_FORM_STARTING_HEIGHT } from "@/constants/constants";
 import { MAIN_STYLE } from "@/constants/styles";
-import { addRecipeDatabase } from "@/db/recipe-db";
+import { addRecipe } from "@/db/recipe-db";
 import { Ingredient } from "@/recipe/ingredient";
 import { Recipe } from "@/recipe/recipe";
 import Feather from "@expo/vector-icons/Feather";
@@ -60,7 +60,7 @@ export default function RecipeEditor({recipe, isUpdate}:Props) {
     textInputRef.current?.focus();
   }
 
-  const addRecipe = async () => {
+  const finalizeRecipe = async () => {
     //const recipe = new Recipe();
 
     const ingredientStrings = new Array<Ingredient>(ingredients.length-1); 
@@ -84,7 +84,7 @@ export default function RecipeEditor({recipe, isUpdate}:Props) {
     recipe.instructions = instructionStrings;
 
     try{
-      await addRecipeDatabase(recipe);
+      await addRecipe(recipe);
       notificationUpdate("Successfully saved recipe")
     }
     catch(e){
@@ -156,7 +156,7 @@ export default function RecipeEditor({recipe, isUpdate}:Props) {
               <Text style={[style.buttonText, {color:colorScheme.onTertiary}]}>Cancel</Text>
               <Ionicons name="close" size={24} color={colorScheme.onTertiary}/>
             </ButtonWrapper>
-            <ButtonWrapper width={'40%'} onPress={addRecipe} backgroundColor={colorScheme.primary}>
+            <ButtonWrapper width={'40%'} onPress={finalizeRecipe} backgroundColor={colorScheme.primary}>
               {!isUpdate && <Text style={[style.buttonText, {color:colorScheme.onPrimary}]}>Add Recipe</Text>}
               {!isUpdate && <Ionicons name="add" size={24} color={colorScheme.onPrimary}/>}
               {isUpdate && <Text style={[style.buttonText, {color:colorScheme.onPrimary}]}>Update</Text>}

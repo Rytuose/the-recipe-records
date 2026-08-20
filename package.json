@@ -5,6 +5,7 @@
   "dependencies": {
     "@expo/ui": "~56.0.25",
     "@expo/vector-icons": "^15.0.2",
+    "@tauri-apps/api": "^2.11.1",
     "expo": "~56.0.12",
     "expo-constants": "~56.0.17",
     "expo-device": "~56.0.4",
