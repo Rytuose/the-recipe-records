@@ -66,10 +66,7 @@ export async function addRecipe(recipe:Recipe){
             );
             return;
         }
-        catch(e){
-            console.log("Failed to add " + e);
-            //return;
-        }
+        catch(e){}
     }
 
     await MobileDatabase.addRecipeMobile(recipe); 
@@ -136,8 +133,7 @@ export async function getRecipeById(id:number){
             
             return recipe;
         }
-        catch(e){
-        }
+        catch(e){}
     }
 
     return await MobileDatabase.getRecipeByIdMobile(id);
