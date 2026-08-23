@@ -11,7 +11,6 @@ import { deleteRecipe, getRecipeById } from "@/db/recipe-db";
 import { Recipe } from "@/recipe/recipe";
 import Feather from "@expo/vector-icons/Feather";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import * as ImagePicker from 'expo-image-picker';
 import { router, Stack, useFocusEffect, useLocalSearchParams } from "expo-router";
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { ScrollView, StyleSheet, Text, useWindowDimensions, View } from "react-native";
@@ -27,7 +26,7 @@ export default function DetailScreen() {
   const [selectedServingIndex, setSelectedServingIndex] = useState<number>(1);
   const [multipliers, setMultipliers] = useState<number[]>([.5,1,2,1]);
   const servingOptions = useRef(["0.5x", "1x", "2x", "Custom"]);
-  const [images, setImages] = useState<(ImagePicker.ImagePickerAsset | null)[]>([null]) 
+  const [images, setImages] = useState<(string | null)[]>([]) 
 
   const colorScheme = getColorScheme();
 
@@ -107,7 +106,7 @@ export default function DetailScreen() {
             <Category editable={true}/>
             <Category categoryAdd={true}/>
           </View>
-          <ImageDisplay images={images} setImages={setImages} editable={true}/>
+          <ImageDisplay images={images} setImages={setImages} editable={false}/>
           <View style={style.row}>
             <ButtonWrapper width={100} height={37} onPress={onEdit} backgroundColor={colorScheme.primary}>
               <Feather name='edit' size={20} color={colorScheme.onPrimary}/>

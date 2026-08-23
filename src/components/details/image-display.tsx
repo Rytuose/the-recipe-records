@@ -1,18 +1,18 @@
 import { NotificationContext } from "@/app/_layout";
 import { getColorScheme } from "@/constants/color-scheme";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { Image } from 'expo-image';
 import * as ImagePicker from 'expo-image-picker';
 import { useContext } from "react";
 import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
+import RecipeImage from "./recipe-image";
 
 const HEIGHT = 320
 const IMAGE_GAP = 10
 
 type Props = {
-    images: (ImagePicker.ImagePickerAsset | null)[],
+    images: (string | null)[],
     editable: boolean,
-    setImages: (images:(ImagePicker.ImagePickerAsset | null)[]) => void
+    setImages: (images:(string | null)[]) => void
 }
 
 export default function ImageDisplay({images, editable, setImages}: Props){
@@ -34,11 +34,28 @@ export default function ImageDisplay({images, editable, setImages}: Props){
         }
         else{
             //setSelectedImage(result.assets[0])
-            let tempImages = [...images, null];
-            tempImages[images.length - 1] = result.assets[0];
+            let tempImages = [...images, result.assets[0].uri];
             setImages(tempImages)
-            //console.log(Paths.document);
+
+            //const imageBytes = await FileSystem.readAsStringAsync
             
+
+            console.log(result.assets[0].uri);
+            
+
+            try{
+                const stuff = await fetch(result.assets[0].uri);
+                const blob = await stuff.blob();
+                //console.log(await blob.text());
+                console.log(blob.size);
+                //TODO blob to image
+                
+                
+            }
+            catch(e){
+                console.log("Error" + e);
+                
+            }
         }
     }
 
@@ -46,17 +63,13 @@ export default function ImageDisplay({images, editable, setImages}: Props){
         console.log("Take Photo");
     }
 
-    //console.log("Selected Image " + selectedImage);
-    //console.log(images);
-    
-
     return <FlatList 
         key = {images.length}
         data={images} 
         horizontal={true}
         contentContainerStyle = {style.containerStyle}
         renderItem={({item, index}) => {
-            if(editable && index === images.length-1){
+            if(editable && index === 0){
                 return <View style={style.addImage}>
                     <Pressable 
                     style={[style.addImageOption, {backgroundColor:colorScheme.primary}]}
@@ -72,11 +85,12 @@ export default function ImageDisplay({images, editable, setImages}: Props){
                     </Pressable>
                 </View>
             }
+
             if (item === null){
                 return <View style={style.tempImage}/>
             }
-
-            return <Image source={item} style={[style.image, {width: HEIGHT * item.width / item.height}]}/>
+            
+            return <RecipeImage uri={item} height={HEIGHT}/>
         }}/>
 
 }
