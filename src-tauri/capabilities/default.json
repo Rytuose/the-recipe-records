@@ -6,6 +6,22 @@
     "main"
   ],
   "permissions": [
-    "core:default"
+    "core:default",
+    {
+      "identifier":"fs:allow-mkdir",
+      "allow": ["$APPDATA/**"]
+    },
+    {
+      "identifier":"fs:allow-write-file",
+      "allow": ["$APPDATA/**"]
+    },
+    {
+      "identifier":"fs:allow-read-file",
+      "allow": ["$APPDATA/**"]
+    },
+    {
+      "identifier":"fs:allow-exists",
+      "allow": ["$APPDATA/**"]
+    }
   ]
 }

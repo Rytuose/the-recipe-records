@@ -47,7 +47,8 @@ export default function RecipeEditor({recipe, isUpdate}:Props) {
       return {instruction: value, key: index, height: INSTRUCTION_FORM_STARTING_HEIGHT};
     }),{instruction: "", key: recipe.instructions.length , height: INSTRUCTION_FORM_STARTING_HEIGHT}]);
 
-  const [images, setImages] = useState<(string | null)[]>([null]) 
+  const [images, setImages] = useState<(string | null)[]>([null, ...recipe.images]) 
+  const [imagePaths, setImagePaths] = useState<string[]>(["", ...recipe.imagePaths])
   const textInputRef = useRef<TextInput>(null);
   const [titleEditable, setTitleEditable] = useState<boolean>(false);
   const {width} = useWindowDimensions();
@@ -64,6 +65,7 @@ export default function RecipeEditor({recipe, isUpdate}:Props) {
 
     const ingredientStrings = new Array<Ingredient>(ingredients.length-1); 
     const instructionStrings = new Array<string>(instructions.length-1);
+    const imageStrings = new Array<string>();
 
     ingredients.forEach((value, index) => {
       if(index < ingredientStrings.length){
@@ -75,12 +77,19 @@ export default function RecipeEditor({recipe, isUpdate}:Props) {
         instructionStrings[index] = value.instruction
       }
     })
+    images.forEach((value, index) => {
+      if (value !== null){
+        imageStrings.push(value)
+      }
+    })
 
     recipe.name = title;
     recipe.website = website;
     recipe.author = author;
     recipe.ingredients = ingredientStrings;
     recipe.instructions = instructionStrings;
+    recipe.images = imageStrings;
+    recipe.imagePaths = imagePaths.slice(1)
 
     try{
       await addRecipe(recipe);
@@ -89,15 +98,11 @@ export default function RecipeEditor({recipe, isUpdate}:Props) {
     catch(e){
       notificationUpdate("Error saving changes: " + e)
     }
-
-    //router.navigate("/add");
-    router.back();
-
     
+    router.back();
   }
 
   const cancelRecipe = () => {
-    //router.navigate("/add");
     router.back();
   }
 
@@ -141,7 +146,7 @@ export default function RecipeEditor({recipe, isUpdate}:Props) {
             <Category editable={true}/>
             <Category categoryAdd={true}/>
           </View>
-          <ImageDisplay images={images} setImages={setImages} editable={true}/>
+          <ImageDisplay images={images} imagePaths={imagePaths} setImages={setImages} setImagePaths={setImagePaths} editable={true}/>
           <View style={style.section}>
             <Text style={style.subtitle}>Ingredients (1x)</Text>
             <IngredientFormBuilder ingredients={ingredients} setIngredients={setIngredients}/>

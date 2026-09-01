@@ -3,6 +3,7 @@ import { baselineToMeasurement, measurementToBaseline } from '@/recipe/measureme
 import { Recipe, RecipeSummaryDetail } from '@/recipe/recipe';
 import { invoke } from '@tauri-apps/api/core';
 import { Platform } from 'react-native';
+import { retrieveImages, storeImages } from './image-manager';
 import * as MobileDatabase from './recipe-db-moblie';
 
 type DBReturn = {
@@ -48,6 +49,7 @@ export async function addRecipe(recipe:Recipe){
     
     if (Platform.OS === 'web'){
         try{
+            let imagePaths = await storeImages(recipe.images, recipe.imagePaths)
             await invoke('add_recipe_desktop',
                 {
                     recipeId: Number.isNaN(recipe.id)?-1:recipe.id,
@@ -58,7 +60,7 @@ export async function addRecipe(recipe:Recipe){
                     author: recipe.author,
                     starred: recipe.starred?1:0,
                     instructions: JSON.stringify(recipe.instructions),
-                    images: JSON.stringify(recipe.images),
+                    images: JSON.stringify(imagePaths),
                     ingredients: recipe.ingredients.map((value) => {
                         return {...value, quantity: measurementToBaseline(value.measurement, value.quantity)}
                     })
@@ -66,7 +68,11 @@ export async function addRecipe(recipe:Recipe){
             );
             return;
         }
-        catch(e){}
+        catch(e){
+            console.log("Error");
+            
+            return;
+        }
     }
 
     await MobileDatabase.addRecipeMobile(recipe); 
@@ -107,7 +113,7 @@ export async function getRecipeById(id:number){
             let returnValue = await invoke<DBReturn>('get_recipe_by_id_desktop',{
                 recipeId: id
             });
-
+            
             if (returnValue.id === -1){
                 return null;
             }
@@ -120,8 +126,11 @@ export async function getRecipeById(id:number){
             recipe.cooking_time = returnValue.cooking_time;
             recipe.author = returnValue.author;
             recipe.instructions = JSON.parse(returnValue.instructions);
-            recipe.images = JSON.parse(returnValue.images);
+            recipe.imagePaths = JSON.parse(returnValue.images);
+            recipe.images = await retrieveImages(recipe.imagePaths);
             recipe.ingredients = [];
+            
+            //retrieveImages(recipe.images)
 
             returnValue.ingredients.forEach((value) => {
                 let ingredient = new Ingredient();
@@ -130,6 +139,8 @@ export async function getRecipeById(id:number){
                 ingredient.quantity = baselineToMeasurement(value.measurement, value.quantity);
                 recipe.ingredients.push(ingredient);
             })
+
+            
             
             return recipe;
         }

@@ -1,21 +1,24 @@
 import { NotificationContext } from "@/app/_layout";
 import { getColorScheme } from "@/constants/color-scheme";
+import { MAIN_STYLE } from "@/constants/styles";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import * as ImagePicker from 'expo-image-picker';
 import { useContext } from "react";
 import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 import RecipeImage from "./recipe-image";
 
-const HEIGHT = 320
+export const IMAGE_HEIGHT = 320
 const IMAGE_GAP = 10
 
 type Props = {
     images: (string | null)[],
+    imagePaths: string[],
     editable: boolean,
-    setImages: (images:(string | null)[]) => void
+    setImages: (images:(string | null)[]) => void,
+    setImagePaths: (images:string[]) => void
 }
 
-export default function ImageDisplay({images, editable, setImages}: Props){
+export default function ImageDisplay({images, imagePaths, editable, setImages, setImagePaths}: Props){
 
     const notificationUpdate = useContext(NotificationContext);
     const colorScheme = getColorScheme();
@@ -26,36 +29,20 @@ export default function ImageDisplay({images, editable, setImages}: Props){
     const addPhoto = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ['images'],
-            quality: 1
+            quality: 1,
+            base64: true
         })
 
         if(result.canceled){
             notificationUpdate("No Photo Selected")
         }
         else{
-            //setSelectedImage(result.assets[0])
-            let tempImages = [...images, result.assets[0].uri];
+            //TODO: Case when base64 is null
+            let tempImages = [...images, result.assets[0].base64!];
             setImages(tempImages)
-
-            //const imageBytes = await FileSystem.readAsStringAsync
-            
-
-            console.log(result.assets[0].uri);
-            
-
-            try{
-                const stuff = await fetch(result.assets[0].uri);
-                const blob = await stuff.blob();
-                //console.log(await blob.text());
-                console.log(blob.size);
-                //TODO blob to image
-                
-                
-            }
-            catch(e){
-                console.log("Error" + e);
-                
-            }
+            let tempImagePaths = [...imagePaths, ""];
+            setImagePaths(tempImagePaths)
+            //console.log("Test " + result.assets[0].base64);
         }
     }
 
@@ -86,28 +73,28 @@ export default function ImageDisplay({images, editable, setImages}: Props){
                 </View>
             }
 
-            if (item === null){
-                return <View style={style.tempImage}/>
+            if (item === null || item.length == 0){
+                return <View style={MAIN_STYLE.imageNotFound}/>
             }
             
-            return <RecipeImage uri={item} height={HEIGHT}/>
+            return <RecipeImage base64={item} height={IMAGE_HEIGHT}/>
         }}/>
 
 }
 
 export const style = StyleSheet.create({
     image:{
-        height: HEIGHT,
+        height: IMAGE_HEIGHT,
         borderRadius: 20
     },
     addImage:{
-        width: (HEIGHT - IMAGE_GAP)/2,
-        height: HEIGHT,
+        width: (IMAGE_HEIGHT - IMAGE_GAP)/2,
+        height: IMAGE_HEIGHT,
         gap: IMAGE_GAP
     },
     addImageOption:{
         width: '100%',
-        height: (HEIGHT - IMAGE_GAP)/2,
+        height: (IMAGE_HEIGHT - IMAGE_GAP)/2,
         justifyContent: 'center',
         alignItems: 'center',
         paddingVertical: 20,
@@ -120,12 +107,7 @@ export const style = StyleSheet.create({
         textAlign: 'center',
         userSelect: 'none',
     },
-    tempImage:{
-        width: 180,
-        height: HEIGHT,
-        borderRadius: 20,
-        backgroundColor: "#123456"
-    },
+
     containerStyle:{
         marginHorizontal: 10,
         gap: 10

@@ -101,6 +101,7 @@ pub fn delete_database_desktop() {
 pub fn add_recipe_desktop(mut recipe_id: i64, recipe_name: String, website: String, cooking_time: i32, 
     date_updated: i64, author: String, starred:i32, instructions: String, images: String,
     ingredients: Vec<Ingredient>) {
+  
   let mut db = DB.lock().unwrap();
   let transaction = (*db).transaction().unwrap();
   
@@ -128,7 +129,7 @@ pub fn add_recipe_desktop(mut recipe_id: i64, recipe_name: String, website: Stri
       [recipe_id, ingredients.len().try_into().unwrap()]);
   }
 
-  let mut count = 0;
+  let mut count = 0;  
 
   {
     let mut ingredient_insert = (transaction).prepare("INSERT OR IGNORE INTO ingredients VALUES (?1)").unwrap();
