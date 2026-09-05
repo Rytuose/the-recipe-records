@@ -1,6 +1,6 @@
-import { BaseDirectory, exists, mkdir, open, readFile } from '@tauri-apps/plugin-fs';
+import { BaseDirectory, exists, mkdir, open, readFile, remove } from '@tauri-apps/plugin-fs';
 
-export async function storeImages(images:string[], paths:string[]){
+export async function storeImages(images:string[], paths:string[], deletePaths:string[]){
     //console.log("Images " + images);
 
     try{
@@ -11,7 +11,7 @@ export async function storeImages(images:string[], paths:string[]){
     }
     catch(e){
         console.log("Error creating images folder " + e);
-        return;
+        return [];
     }
 
     let imagePaths = []
@@ -56,9 +56,23 @@ export async function storeImages(images:string[], paths:string[]){
         }
         catch(e){
             console.log("Error" + e);
-            
         }
     }
+
+    for (const deletePath of deletePaths){
+        if (deletePath !== ""){
+            try{
+                await remove(deletePath,{
+                    baseDir: BaseDirectory.AppData
+                })
+            }
+            catch(e){
+                console.log("Error" + e);
+            }
+        }
+    }
+
+    //TODO: Delete Images
 
     console.log("Image Paths " + imagePaths);
     

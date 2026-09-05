@@ -49,7 +49,11 @@ export async function addRecipe(recipe:Recipe){
     
     if (Platform.OS === 'web'){
         try{
-            let imagePaths = await storeImages(recipe.images, recipe.imagePaths)
+            let imagePaths = await storeImages(recipe.images, recipe.imagePaths, recipe.deletedImages)
+            
+            console.log("Image Paths Added");
+            
+            
             await invoke('add_recipe_desktop',
                 {
                     recipeId: Number.isNaN(recipe.id)?-1:recipe.id,
@@ -66,12 +70,13 @@ export async function addRecipe(recipe:Recipe){
                     })
                 }
             );
+
+            console.log("Finished");
+            
             return;
         }
         catch(e){
-            console.log("Error");
-            
-            return;
+            console.log("Web Error");
         }
     }
 

@@ -22,6 +22,10 @@
     {
       "identifier":"fs:allow-exists",
       "allow": ["$APPDATA/**"]
+    },
+    {
+      "identifier":"fs:allow-remove",
+      "allow": ["$APPDATA/**"]
     }
   ]
 }

@@ -1,5 +1,5 @@
 import { NotificationContext } from "@/app/_layout";
-import ImageDisplay from "@/components/details/image-display";
+import ImageDisplay, { ImagePair } from "@/components/details/image-display";
 import ButtonWrapper from "@/components/general/button-wrapper";
 import Category from "@/components/general/category";
 import IngredientFormBuilder from "@/components/recipe-edit/ingredient-form-builder";
@@ -47,10 +47,20 @@ export default function RecipeEditor({recipe, isUpdate}:Props) {
       return {instruction: value, key: index, height: INSTRUCTION_FORM_STARTING_HEIGHT};
     }),{instruction: "", key: recipe.instructions.length , height: INSTRUCTION_FORM_STARTING_HEIGHT}]);
 
-  const [images, setImages] = useState<(string | null)[]>([null, ...recipe.images]) 
-  const [imagePaths, setImagePaths] = useState<string[]>(["", ...recipe.imagePaths])
+  //const [images, setImages] = useState<(string | null)[]>([null, ...recipe.images]) 
+  //const [imagePaths, setImagePaths] = useState<string[]>(["", ...recipe.imagePaths])
+  const [deletedImages, setDeletedImages] = useState<string[]>([]);
   const textInputRef = useRef<TextInput>(null);
   const [titleEditable, setTitleEditable] = useState<boolean>(false);
+  const [imagePairs, setImagePairs] = useState<(ImagePair|null)[]>(
+    [null, ...recipe.images.map((value, index) => {
+          return {
+            image: value,
+            path: recipe.imagePaths[index],
+            key: index
+          }
+    })]
+  )
   const {width} = useWindowDimensions();
   const notificationUpdate = useContext(NotificationContext);
   const colorScheme = getColorScheme();
@@ -66,6 +76,7 @@ export default function RecipeEditor({recipe, isUpdate}:Props) {
     const ingredientStrings = new Array<Ingredient>(ingredients.length-1); 
     const instructionStrings = new Array<string>(instructions.length-1);
     const imageStrings = new Array<string>();
+    const paths = new Array<string>();
 
     ingredients.forEach((value, index) => {
       if(index < ingredientStrings.length){
@@ -77,9 +88,10 @@ export default function RecipeEditor({recipe, isUpdate}:Props) {
         instructionStrings[index] = value.instruction
       }
     })
-    images.forEach((value, index) => {
+    imagePairs.forEach((value, index) => {
       if (value !== null){
-        imageStrings.push(value)
+        imageStrings.push(value.image)
+        paths.push(value.path)
       }
     })
 
@@ -89,7 +101,8 @@ export default function RecipeEditor({recipe, isUpdate}:Props) {
     recipe.ingredients = ingredientStrings;
     recipe.instructions = instructionStrings;
     recipe.images = imageStrings;
-    recipe.imagePaths = imagePaths.slice(1)
+    recipe.imagePaths = paths;
+    recipe.deletedImages = deletedImages.map((value) => {return value});
 
     try{
       await addRecipe(recipe);
@@ -146,7 +159,8 @@ export default function RecipeEditor({recipe, isUpdate}:Props) {
             <Category editable={true}/>
             <Category categoryAdd={true}/>
           </View>
-          <ImageDisplay images={images} imagePaths={imagePaths} setImages={setImages} setImagePaths={setImagePaths} editable={true}/>
+          <ImageDisplay images={imagePairs} deletedImages={deletedImages} 
+            setImages={setImagePairs} setDeletedImages={setDeletedImages} editable={true} nextIdValue={imagePairs.length}/>
           <View style={style.section}>
             <Text style={style.subtitle}>Ingredients (1x)</Text>
             <IngredientFormBuilder ingredients={ingredients} setIngredients={setIngredients}/>

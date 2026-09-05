@@ -223,6 +223,7 @@ export async function getRecipeByIdMobile(id:number){
     recipe.author = result!.author;
     recipe.instructions = JSON.parse(result!.instructions)
     recipe.images = JSON.parse(result!.images)
+    
 
     let ingredientResult:{
         ingredient_name: string,

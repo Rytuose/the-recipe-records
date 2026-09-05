@@ -10,7 +10,8 @@ export class Recipe{
     starred: boolean = false;
     categories: string[] = [];
     images: string[] = [];
-    imagePaths: string[] = []; //TODO: this
+    imagePaths: string[] = [];
+    deletedImages: string[] = [];
     ingredients: Ingredient[] = [];
     instructions: string[] = [];
 }

@@ -1,4 +1,3 @@
-import { IMAGE_HEIGHT } from "@/components/details/image-display";
 import { StyleSheet } from "react-native";
 import { getColorScheme } from "./color-scheme";
 
@@ -38,10 +37,4 @@ export const MAIN_STYLE = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center'
   },
-  imageNotFound:{
-    width: 180,
-    height: IMAGE_HEIGHT,
-    borderRadius: 20,
-    backgroundColor: "#123456"
-},
 });
