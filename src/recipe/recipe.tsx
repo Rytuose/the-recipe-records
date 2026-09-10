@@ -21,4 +21,5 @@ export type RecipeSummaryDetail = {
     name: string;
     cooking_time: number;
     starred: boolean;
+    images: string;
 }

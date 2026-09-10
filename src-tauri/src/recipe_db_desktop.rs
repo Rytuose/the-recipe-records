@@ -17,7 +17,8 @@ pub struct RecipeSummaryDetail{
   id: i32,
   name: String,
   cooking_time: i32,
-  starred: bool
+  starred: bool,
+  images: String
 }
 
 #[derive(serde::Deserialize, Serialize)]
@@ -84,7 +85,7 @@ pub fn init_database_desktop() {
             FOREIGN KEY (recipe_id) REFERENCES recipes(recipe_id) ON DELETE CASCADE
         );
 
-        CREATE INDEX IF NOT EXISTS recipe_summary_index ON recipes(date_updated, recipe_id, recipe_name, cooking_time, starred);
+        CREATE INDEX IF NOT EXISTS recipe_summary_index ON recipes(starred, date_updated);
 
     ").expect("Error creating db");
   println!("Success?")
@@ -163,9 +164,9 @@ pub fn get_recipes_desktop() -> Vec<RecipeSummaryDetail> {
 
   let db = DB.lock().unwrap();
 
-  let mut query = (*db).prepare("SELECT R.recipe_id, R.recipe_name, R.cooking_time, R.starred
+  let mut query = (*db).prepare("SELECT R.recipe_id, R.recipe_name, R.cooking_time, R.starred, R.images
         FROM recipes R
-        ORDER BY R.date_updated DESC
+        ORDER BY R.starred DESC, R.date_updated DESC
         LIMIT 20").unwrap();
   
   let result = query.query_map([], |row| {
@@ -173,7 +174,8 @@ pub fn get_recipes_desktop() -> Vec<RecipeSummaryDetail> {
       id: row.get(0)?, 
       name: row.get(1)?, 
       cooking_time: row.get(2)?, 
-      starred: row.get(3)?})
+      starred: row.get(3)?,
+      images: row.get(4)?})
   }).unwrap();
 
   let mut summaries:Vec<RecipeSummaryDetail> = Vec::new();
@@ -246,4 +248,12 @@ pub fn get_recipe_by_id_desktop(recipe_id: i32) -> Recipe {
   return result;
 
 
+}
+
+#[tauri::command]
+pub fn star_recipe_desktop(recipe_id: i32, starred: i32) {
+  println!("Star Recipe Desktop {} {}", recipe_id, starred);
+  let db = DB.lock().unwrap();
+  let _ = (*db).execute("UPDATE recipes SET starred = ?1 WHERE recipe_id = ?2", 
+    [starred.to_string(), recipe_id.to_string()]);
 }

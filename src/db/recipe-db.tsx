@@ -103,6 +103,15 @@ export async function getRecipes(){
     if (Platform.OS === 'web'){
         try{
             let returnValue = await invoke<RecipeSummaryDetail[]>('get_recipes_desktop');
+            
+            for (let val of returnValue){
+                let images = JSON.parse(val.images)
+                if (images.length > 0){
+                    let image = await retrieveImages([images[0]])
+                    val.images = image[0]
+                }
+            }
+
             return returnValue;
         }
         catch(e){}
@@ -153,6 +162,24 @@ export async function getRecipeById(id:number){
     }
 
     return await MobileDatabase.getRecipeByIdMobile(id);
+    
+}
+
+export async function starRecipe(id: number, starred: boolean){
+    console.log("Starring " + id);
+    if (Platform.OS === 'web'){
+        try{
+            await invoke('star_recipe_desktop', 
+            {
+                recipeId: id,
+                starred: starred?1:0
+            });
+            return;
+        }
+        catch(e){}
+    }
+
+    await MobileDatabase.starRecipeMobile(id, starred);
     
 }
 

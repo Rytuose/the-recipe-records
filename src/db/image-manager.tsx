@@ -80,17 +80,22 @@ export async function storeImages(images:string[], paths:string[], deletePaths:s
 }
 
 export async function retrieveImages(paths:string[]){
-    console.log("Retrieve Images " + paths );
+    //console.log("Retrieve Images " + paths );
     
     let uriPaths:string[] = []
 
     for (let path of paths){
 
-        console.log("Looking for path " + path);
+        //console.log("Looking for path " + path);
         
-        const fileExists = await exists(path, {
-            baseDir: BaseDirectory.AppData
-        })
+        let fileExists = false;
+
+        try{
+            fileExists = await exists(path, {
+                baseDir: BaseDirectory.AppData
+            })
+        }
+        catch(e){}
 
         if (!fileExists){       
             uriPaths.push("")
