@@ -19,7 +19,9 @@ pub fn run() {
       recipe_db_desktop::add_recipe_desktop,
       recipe_db_desktop::delete_recipe_desktop,
       recipe_db_desktop::get_recipes_desktop,
-      recipe_db_desktop::get_recipe_by_id_desktop])
+      recipe_db_desktop::get_recipe_by_id_desktop,
+      recipe_db_desktop::star_recipe_desktop])
+    .plugin(tauri_plugin_fs::init())
     .run(tauri::generate_context!())
     .expect("error while running tauri application");
 }

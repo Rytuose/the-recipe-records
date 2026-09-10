@@ -2,6 +2,13 @@ import { StyleSheet } from "react-native";
 import { getColorScheme } from "./color-scheme";
 
 export const MAIN_STYLE = StyleSheet.create({
+  title:{
+    flex: 1, 
+    alignItems: "center",
+    justifyContent: "flex-start",
+    flexDirection: "column",
+    backgroundColor: getColorScheme().background,
+  },
   container: {
     flex: 1,
     alignItems: "center",
@@ -29,5 +36,5 @@ export const MAIN_STYLE = StyleSheet.create({
     backgroundColor: getColorScheme().secondary,
     alignItems: 'center',
     justifyContent: 'center'
-  }
+  },
 });

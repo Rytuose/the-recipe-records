@@ -1,5 +1,5 @@
 import { NotificationContext } from "@/app/_layout";
-import ImageDisplay from "@/components/details/image-display";
+import ImageDisplay, { ImagePair } from "@/components/details/image-display";
 import ButtonWrapper from "@/components/general/button-wrapper";
 import Category from "@/components/general/category";
 import SegmentedButton from "@/components/general/segmented-button";
@@ -26,6 +26,8 @@ export default function DetailScreen() {
   const [selectedServingIndex, setSelectedServingIndex] = useState<number>(1);
   const [multipliers, setMultipliers] = useState<number[]>([.5,1,2,1]);
   const servingOptions = useRef(["0.5x", "1x", "2x", "Custom"]);
+  //const [images, setImages] = useState<(string | null)[]>([]) 
+  const imagePairs = useRef<ImagePair[]>([]);
 
   const colorScheme = getColorScheme();
 
@@ -43,6 +45,13 @@ export default function DetailScreen() {
           return;
         }
         setRecipe(queriedRecipe);
+        imagePairs.current = queriedRecipe.images.map((value, index) => {
+          return {
+            image: value,
+            path: queriedRecipe.imagePaths[index],
+            key: index
+          }
+        })
       }
       getData();
     }, [])
@@ -82,7 +91,7 @@ export default function DetailScreen() {
     setMultipliers(newMulitpliers);
   }
 
-  let portion = multipliers[selectedServingIndex];
+  let portion = multipliers[selectedServingIndex]; 
 
   return (
     <>
@@ -105,7 +114,7 @@ export default function DetailScreen() {
             <Category editable={true}/>
             <Category categoryAdd={true}/>
           </View>
-          <ImageDisplay/>
+          <ImageDisplay images={imagePairs.current} deletedImages={[]} setImages={() => {}} setDeletedImages={() => []} editable={false} nextIdValue={imagePairs.current.length}/>
           <View style={style.row}>
             <ButtonWrapper width={100} height={37} onPress={onEdit} backgroundColor={colorScheme.primary}>
               <Feather name='edit' size={20} color={colorScheme.onPrimary}/>

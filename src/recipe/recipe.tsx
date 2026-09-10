@@ -10,6 +10,8 @@ export class Recipe{
     starred: boolean = false;
     categories: string[] = [];
     images: string[] = [];
+    imagePaths: string[] = [];
+    deletedImages: string[] = [];
     ingredients: Ingredient[] = [];
     instructions: string[] = [];
 }
@@ -19,4 +21,5 @@ export type RecipeSummaryDetail = {
     name: string;
     cooking_time: number;
     starred: boolean;
+    images: string;
 }

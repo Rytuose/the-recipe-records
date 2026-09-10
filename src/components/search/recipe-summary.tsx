@@ -2,8 +2,10 @@
 import { NotificationContext } from '@/app/_layout';
 import { getColorScheme } from '@/constants/color-scheme';
 import { RECIPE_SUMMARY_WIDTH } from '@/constants/constants';
+import { starRecipe } from '@/db/recipe-db';
 import { RecipeSummaryDetail } from '@/recipe/recipe';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
+import { Image } from 'expo-image';
 import { router } from "expo-router";
 import { useContext, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
@@ -31,7 +33,8 @@ export default function RecipeSummary({summary}:Props){
         router.navigate({pathname: "/search/details", params:{id:summary.id}});
     }
 
-    const favoriteRecipe = () => {
+    const favoriteRecipe = async () => {
+        await starRecipe(summary.id, !favorite);
         setFavorite(!favorite);
     }
 
@@ -40,11 +43,11 @@ export default function RecipeSummary({summary}:Props){
         style={style.button}
         onPress={recipeClick}>
             <View style={style.horizontalView}>
-                <View style={style.imagePlaceholder}/>
                 <View style={{flex: 1}}>
                     <Text style={[style.titleText, {color: colorScheme.onSecondary}]}>{summary.name}</Text>
                     <Text style={[style.bodyText,{color: colorScheme.onSecondary}]}>Time: {summary.cooking_time} hrs</Text>
                 </View>
+                <Image source={{uri: "data:image/png;base64," + summary.images}} style = {style.image}/>
                 <View>
                     <Pressable style={style.favoriteButton} onPress={favoriteRecipe}>
                         <FontAwesome name={favoriteName} size ={32} color={favoriteColor}/>
@@ -61,12 +64,13 @@ export const style = StyleSheet.create({
         width: RECIPE_SUMMARY_WIDTH,
         height: RECIPE_SUMMARY_HEIGHT,
         borderWidth: BORDER_WIDTH,
-        borderRadius: 20
+        borderRadius: 20,
     },
     button:{
         flex: 1,
         paddingVertical: PADDING,
-        paddingHorizontal: PADDING
+        paddingHorizontal: PADDING,
+        justifyContent: 'center'
     },
     favoriteButton: {
         width: 40, 
@@ -92,6 +96,11 @@ export const style = StyleSheet.create({
         backgroundColor: '#123456',
         borderRadius: 7
 
+    },
+    image:{
+        height: RECIPE_SUMMARY_HEIGHT - BORDER_WIDTH - 2*PADDING,
+        width: RECIPE_SUMMARY_HEIGHT - BORDER_WIDTH - 2*PADDING,
+        borderRadius: 7
     }
 
 })

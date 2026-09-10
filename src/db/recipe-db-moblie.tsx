@@ -56,7 +56,7 @@ export async function initDatabaseMobile() {
             FOREIGN KEY (recipe_id) REFERENCES recipes(recipe_id) ON DELETE CASCADE
         );
 
-        CREATE INDEX IF NOT EXISTS recipe_summary_index ON recipes(date_updated, recipe_id, recipe_name, cooking_time, starred);
+        CREATE INDEX IF NOT EXISTS recipe_summary_index ON recipes(starred, date_updated);
 
     `);
 
@@ -168,10 +168,10 @@ export async function deleteRecipeMobile(id:number){
 export async function getRecipesMobile(){
     await dbCheck();
     
-    let result:{recipe_id:number, recipe_name:string, cooking_time:number, starred:number}[] = await db.getAllAsync(`
-        SELECT R.recipe_id, R.recipe_name, R.cooking_time, R.starred
+    let result:{recipe_id:number, recipe_name:string, cooking_time:number, starred:number, images:string}[] = await db.getAllAsync(`
+        SELECT R.recipe_id, R.recipe_name, R.cooking_time, R.starred, R.images
         FROM recipes R
-        ORDER BY R.date_updated DESC
+        ORDER BY R.starred DESC, R.date_updated DESC
         LIMIT 20
     `)
 
@@ -184,7 +184,8 @@ export async function getRecipesMobile(){
             id: row.recipe_id,
             name: row.recipe_name,
             cooking_time: row.cooking_time,
-            starred: row.starred === 1
+            starred: row.starred === 1,
+            images: JSON.parse(row.images)[0]
         }
 
         count++;
@@ -223,6 +224,7 @@ export async function getRecipeByIdMobile(id:number){
     recipe.author = result!.author;
     recipe.instructions = JSON.parse(result!.instructions)
     recipe.images = JSON.parse(result!.images)
+    
 
     let ingredientResult:{
         ingredient_name: string,
@@ -245,6 +247,18 @@ export async function getRecipeByIdMobile(id:number){
     }
     
     return recipe;
+}
+
+export async function starRecipeMobile(id: number, starred: boolean){
+    console.log("Star Recipe Mobile " + id + " " + starred);
+    await dbCheck();
+    await db.runAsync(`UPDATE recipes SET starred = $starred WHERE recipe_id = $recipe_id`, 
+        {
+            $starred: starred?1:0,
+            $recipe_id: id
+        }
+    )
+    
 }
 
 async function dbCheck(){

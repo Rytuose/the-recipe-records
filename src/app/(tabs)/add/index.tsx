@@ -4,7 +4,7 @@ import { getColorScheme } from "@/constants/color-scheme";
 import { MAIN_STYLE } from "@/constants/styles";
 import Feather from "@expo/vector-icons/Feather";
 import { useRouter } from "expo-router";
-import { StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, Text, useWindowDimensions, View } from "react-native";
 
 const BUTTON_WIDTH = 175;
 const BUTTON_FONT_SIZE = 20;
@@ -13,7 +13,7 @@ export default function AddScreen() {
 
   const colorScheme = getColorScheme();
   const router = useRouter();
-
+  const {width} = useWindowDimensions();
   
 
   const linkRecipe = () => {
@@ -25,20 +25,24 @@ export default function AddScreen() {
   }
 
   return (
-    <View style={MAIN_STYLE.container}>
-      <Text style={style.title}>{"The\nRecipe\nRecords"}</Text>
-      <Text style={style.subtitle}>Submit a link</Text>
-      <WebsiteInput/>
-      <ButtonWrapper width={BUTTON_WIDTH} onPress={linkRecipe} backgroundColor={colorScheme.primary}>
-        <Feather name={"send"} size={20} color={colorScheme.onPrimary}/>
-        <Text style={[style.buttonText, {color: colorScheme.onPrimary}]}>Go!</Text>
-      </ButtonWrapper>
-      <Text style={[style.title, {fontSize: 70}]}>OR</Text>
-      <Text style={style.subtitle}>Write a recipe</Text>
-      <ButtonWrapper width={BUTTON_WIDTH} onPress={writeRecipe} backgroundColor={colorScheme.primary}>
-        <Feather name={"pen-tool"} size={20} color={colorScheme.onPrimary}/>
-        <Text style={[style.buttonText, {color: colorScheme.onPrimary}]}>New Recipe</Text>
-      </ButtonWrapper>
+    <View style={MAIN_STYLE.title}>
+      <ScrollView
+      style = {{width: width}}
+      contentContainerStyle={[MAIN_STYLE.container, {marginBottom: 850}]}>
+        <Text style={style.title}>{"The\nRecipe\nRecords"}</Text>
+        <Text style={style.subtitle}>Submit a link</Text>
+        <WebsiteInput/>
+        <ButtonWrapper width={BUTTON_WIDTH} onPress={linkRecipe} backgroundColor={colorScheme.primary}>
+          <Feather name={"send"} size={20} color={colorScheme.onPrimary}/>
+          <Text style={[style.buttonText, {color: colorScheme.onPrimary}]}>Go!</Text>
+        </ButtonWrapper>
+        <Text style={[style.title, {fontSize: 70}]}>OR</Text>
+        <Text style={style.subtitle}>Write a recipe</Text>
+        <ButtonWrapper width={BUTTON_WIDTH} onPress={writeRecipe} backgroundColor={colorScheme.primary}>
+          <Feather name={"pen-tool"} size={20} color={colorScheme.onPrimary}/>
+          <Text style={[style.buttonText, {color: colorScheme.onPrimary}]}>New Recipe</Text>
+        </ButtonWrapper>
+      </ScrollView>
     </View>
   );
 }

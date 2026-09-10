@@ -43,9 +43,17 @@
           }
         }
       ],
+      [
+        "expo-file-system",
+        {
+          "supportsOpeningDocumentsInPlace": true,
+          "enableFileSharing": true
+        }
+      ],
       "expo-image",
       "expo-sqlite",
-      "expo-font"
+      "expo-font",
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true,

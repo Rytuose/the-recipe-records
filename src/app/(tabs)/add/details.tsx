@@ -3,6 +3,5 @@ import { Recipe } from "@/recipe/recipe";
 
 export default function AddDetailScreen() {
     return <RecipeEditor 
-        recipe = {new Recipe()}
-    />
+        recipe={new Recipe()} isUpdate={false}    />
 }

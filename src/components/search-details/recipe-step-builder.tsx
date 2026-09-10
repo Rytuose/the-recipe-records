@@ -9,7 +9,7 @@ type Props = {
 export default function RecipeStepBuilder({recipeSteps}:Props){
 
     return <View style={style.view}>
-        {recipeSteps.map(value => {return <RecipeStep key={value} text={value}/>})}
+        {recipeSteps.map((value, index) => {return <RecipeStep key={index} text={value}/>})}
     </View>
 
 }

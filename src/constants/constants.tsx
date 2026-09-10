@@ -7,3 +7,5 @@ export const INSTRUCTION_FORM_STARTING_HEIGHT = 34;
 export const INGREDIENT_HEIGHT = 35;
 
 export const RECIPE_SUMMARY_WIDTH = 460;
+
+export const IMAGE_HEIGHT = 320
