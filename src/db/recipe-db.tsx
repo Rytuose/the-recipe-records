@@ -1,6 +1,6 @@
 import { Ingredient } from '@/recipe/ingredient';
 import { baselineToMeasurement, measurementToBaseline } from '@/recipe/measurement';
-import { Recipe, RecipeSummaryDetail } from '@/recipe/recipe';
+import { Recipe, RecipeSearchCriteria, RecipeSummaryDetail } from '@/recipe/recipe';
 import { invoke } from '@tauri-apps/api/core';
 import { Platform } from 'react-native';
 import { retrieveImages, storeImages } from './image-manager';
@@ -121,6 +121,32 @@ export async function getRecipes(){
     
 }
 
+export async function queryRecipes(criteria:RecipeSearchCriteria){
+    if (Platform.OS === 'web'){
+        try{
+            let returnValue = await invoke<RecipeSummaryDetail[]>('query_recipes_desktop', {
+                criteria: criteria
+            })
+
+            for (let val of returnValue){
+                let images = JSON.parse(val.images)
+                if (images.length > 0){
+                    let image = await retrieveImages([images[0]])
+                    val.images = image[0]
+                }
+            }
+            
+            return returnValue;
+        }
+        catch(e){}
+    }
+
+    await MobileDatabase.queryRecipesMobile(criteria);
+
+    return [];
+
+}
+
 export async function getRecipeById(id:number){
     if (Platform.OS === 'web'){
         try{
@@ -153,8 +179,6 @@ export async function getRecipeById(id:number){
                 ingredient.quantity = baselineToMeasurement(value.measurement, value.quantity);
                 recipe.ingredients.push(ingredient);
             })
-
-            
             
             return recipe;
         }

@@ -23,3 +23,7 @@ export type RecipeSummaryDetail = {
     starred: boolean;
     images: string;
 }
+
+export type RecipeSearchCriteria = {
+    name: string;
+}

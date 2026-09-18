@@ -1,3 +1,4 @@
+use rusqlite::params_from_iter;
 use rusqlite::{Connection};
 use serde::Serialize;
 use std::sync::Mutex;
@@ -19,6 +20,11 @@ pub struct RecipeSummaryDetail{
   cooking_time: i32,
   starred: bool,
   images: String
+}
+
+#[derive(serde::Deserialize, Serialize)]
+pub struct RecipeSearchCriteria{
+  name: String,
 }
 
 #[derive(serde::Deserialize, Serialize)]
@@ -85,7 +91,7 @@ pub fn init_database_desktop() {
             FOREIGN KEY (recipe_id) REFERENCES recipes(recipe_id) ON DELETE CASCADE
         );
 
-        CREATE INDEX IF NOT EXISTS recipe_summary_index ON recipes(starred, date_updated);
+        CREATE INDEX IF NOT EXISTS recipe_summary_index ON recipes(date_updated);
 
     ").expect("Error creating db");
   println!("Success?")
@@ -166,7 +172,7 @@ pub fn get_recipes_desktop() -> Vec<RecipeSummaryDetail> {
 
   let mut query = (*db).prepare("SELECT R.recipe_id, R.recipe_name, R.cooking_time, R.starred, R.images
         FROM recipes R
-        ORDER BY R.starred DESC, R.date_updated DESC
+        ORDER BY R.date_updated DESC
         LIMIT 20").unwrap();
   
   let result = query.query_map([], |row| {
@@ -184,6 +190,58 @@ pub fn get_recipes_desktop() -> Vec<RecipeSummaryDetail> {
     let recipe_summary = summary.unwrap();
     summaries.push(recipe_summary);
   }
+
+  return summaries;
+}
+
+#[tauri::command]
+pub fn query_recipes_desktop(criteria: RecipeSearchCriteria) -> Vec<RecipeSummaryDetail>{
+  println!("query recipes desktop {}", criteria.name);
+
+  let mut query = String::from("SELECT R.recipe_id, R.recipe_name, R.cooking_time, R.starred, R.images
+        FROM recipes R
+         ");
+
+  let mut where_clause = "WHERE ";
+  let mut params: Vec<String> = Vec::new();
+
+  if criteria.name != "" {
+    params.push(format!("%{}%", criteria.name));
+    query.push_str(&(format!("{} R.recipe_name LIKE ?{}", where_clause, params.len().to_string())));
+    where_clause = " AND ";
+  }
+
+  query.push_str("
+   ORDER BY R.date_updated DESC
+        LIMIT 20");
+
+  println!("{}", query);
+  println!("{}", params.len());
+
+  let db = DB.lock().unwrap();
+
+  let mut query_recipes = (*db).prepare(&query).unwrap();
+
+
+  //params_from_iter(params.iter())
+
+  let result = query_recipes.query_map(params_from_iter(params.iter()), |row| {
+    Ok(RecipeSummaryDetail  { 
+      id: row.get(0)?, 
+      name: row.get(1)?, 
+      cooking_time: row.get(2)?, 
+      starred: row.get(3)?,
+      images: row.get(4)?})
+  }).unwrap();
+
+  let mut summaries:Vec<RecipeSummaryDetail> = Vec::new();
+
+  for summary in result{
+    let recipe_summary = summary.unwrap();
+    summaries.push(recipe_summary);
+  }
+
+  //https://docs.rs/rusqlite/latest/rusqlite/struct.ParamsFromIter.html
 
   return summaries;
 }

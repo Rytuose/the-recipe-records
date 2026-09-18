@@ -4,6 +4,7 @@ import { Stack } from "expo-router";
 import { createContext, useRef, useState } from "react";
 
 export const NotificationContext = createContext((text:string) => {});
+export const RefreshContext = createContext(useState(0));
 
 export default function RootLayout() {
 
@@ -12,6 +13,7 @@ export default function RootLayout() {
     'Body': require('../../assets/fonts/Playwrite_NZ_Basic/static/PlaywriteNZBasic-Light.ttf')});
   const [notificationText, updateNotificationText] = useState<string>("");
   const timer = useRef(-1);
+  const refreshRecipeSearch = useState(0);
 
   const updateNotification = (text:string) => {
     updateNotificationText(text);
@@ -23,10 +25,12 @@ export default function RootLayout() {
     }, 5000)
   }
 
-  return <NotificationContext.Provider value = {(text:string) => {updateNotification(text);}}> 
-    <Notification text={notificationText}/>
-    <Stack>
-      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-    </Stack>
-  </NotificationContext.Provider>
+  return <RefreshContext.Provider value = {refreshRecipeSearch}>
+    <NotificationContext.Provider value = {(text:string) => {updateNotification(text);}}>
+      <Notification text={notificationText}/>
+      <Stack>
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      </Stack>
+    </NotificationContext.Provider>
+  </RefreshContext.Provider>
 }

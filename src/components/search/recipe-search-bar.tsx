@@ -1,32 +1,50 @@
 import { getColorScheme } from "@/constants/color-scheme";
+import { RecipeSearchCriteria } from "@/recipe/recipe";
+import { BottomSheet } from '@expo/ui';
 import Feather from "@expo/vector-icons/Feather";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { useState } from "react";
 import { StyleSheet, TextInput, View } from "react-native";
 import ButtonWrapper from "../general/button-wrapper";
+import RecipeFilter from "./recipe-filter";
 
 const ICON_DIMENSION = 36;
 const ICON_SIZE = 24;
 
-export default function SearchBar(){
+type Props = {
+  setCriteria: (recipes: RecipeSearchCriteria) => void
+}
 
+export default function SearchBar({setCriteria} : Props){
+
+    const [searchVal, setSearchVal] = useState<string>("")
+    const [isPresented, setIsPresented] = useState<boolean>(false)
     const colorScheme = getColorScheme();
 
     const filterPress = () => {
-
+      console.log("Filter press");
+      setIsPresented(true);
+      //Bottom Sheet
     };
 
-    const searchPress = () => {
-
+    const searchPress = async () => {
+      console.log("Search press " + searchVal);
+      setCriteria({name: searchVal});
     }
 
     return <View style = {[style.view, {backgroundColor:colorScheme.surfaceContainerHigh}]}>
+      <BottomSheet isPresented={isPresented} onDismiss={() => {setIsPresented(false)}}>
+        <RecipeFilter/>
+      </BottomSheet>
       <ButtonWrapper width={ICON_DIMENSION} height={ICON_DIMENSION} noBorder={true} onPress={filterPress}>
         <Feather name="filter" size={ICON_SIZE}/>
       </ButtonWrapper>
       <TextInput
           style={style.textInput}
-          defaultValue=""
+          defaultValue={searchVal}
+          onChangeText={setSearchVal}
           placeholder="Recipe Name Here"
+          onSubmitEditing={searchPress}
       />
       <ButtonWrapper width={ICON_DIMENSION} height={ICON_SIZE} noBorder={true} onPress={searchPress}>
         <Ionicons name="search-sharp" size={ICON_SIZE}/>

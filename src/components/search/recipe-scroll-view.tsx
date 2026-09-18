@@ -16,9 +16,6 @@ export default function RecipeScrollView({recipes}:Props){
     
     const columnCount = Math.floor((width - 2*MARGIN + GAP)/(RECIPE_SUMMARY_WIDTH + GAP));
 
-    const tempData = [1,2,3,4,5,6,7]
-
-
     return  <FlatList
             key={columnCount}
             style = {style.view}

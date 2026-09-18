@@ -1,4 +1,4 @@
-import { NotificationContext } from "@/app/_layout";
+import { NotificationContext, RefreshContext } from "@/app/_layout";
 import ImageDisplay, { ImagePair } from "@/components/details/image-display";
 import ButtonWrapper from "@/components/general/button-wrapper";
 import Category from "@/components/general/category";
@@ -63,6 +63,7 @@ export default function RecipeEditor({recipe, isUpdate}:Props) {
   )
   const {width} = useWindowDimensions();
   const notificationUpdate = useContext(NotificationContext);
+  let refresh = useContext(RefreshContext);
   const colorScheme = getColorScheme();
 
   const editTitle = () => {
@@ -107,6 +108,7 @@ export default function RecipeEditor({recipe, isUpdate}:Props) {
     try{
       await addRecipe(recipe);
       notificationUpdate("Successfully saved recipe")
+      refresh[1](refresh[0] + 1)
     }
     catch(e){
       notificationUpdate("Error saving changes: " + e)

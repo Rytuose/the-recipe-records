@@ -1,6 +1,6 @@
 import { Ingredient } from "@/recipe/ingredient";
 import { baselineToMeasurement, measurementToBaseline } from "@/recipe/measurement";
-import { Recipe, RecipeSummaryDetail } from "@/recipe/recipe";
+import { Recipe, RecipeSearchCriteria, RecipeSummaryDetail } from "@/recipe/recipe";
 import * as SQLite from 'expo-sqlite';
 
 const DATABASE_NAME = 'the-recipe-records.db'
@@ -56,7 +56,7 @@ export async function initDatabaseMobile() {
             FOREIGN KEY (recipe_id) REFERENCES recipes(recipe_id) ON DELETE CASCADE
         );
 
-        CREATE INDEX IF NOT EXISTS recipe_summary_index ON recipes(starred, date_updated);
+        CREATE INDEX IF NOT EXISTS recipe_summary_index ON recipes(date_updated);
 
     `);
 
@@ -171,7 +171,7 @@ export async function getRecipesMobile(){
     let result:{recipe_id:number, recipe_name:string, cooking_time:number, starred:number, images:string}[] = await db.getAllAsync(`
         SELECT R.recipe_id, R.recipe_name, R.cooking_time, R.starred, R.images
         FROM recipes R
-        ORDER BY R.starred DESC, R.date_updated DESC
+        ORDER BY R.date_updated DESC
         LIMIT 20
     `)
 
@@ -192,6 +192,11 @@ export async function getRecipesMobile(){
     }
 
     return recipes;
+}
+
+export async function queryRecipesMobile(criteria:RecipeSearchCriteria){
+    console.log("Query recipes mobile " + criteria.name);
+    
 }
 
 export async function getRecipeByIdMobile(id:number){

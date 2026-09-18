@@ -12,7 +12,7 @@ import { Recipe } from "@/recipe/recipe";
 import Feather from "@expo/vector-icons/Feather";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { router, Stack, useFocusEffect, useLocalSearchParams } from "expo-router";
-import { useCallback, useContext, useEffect, useRef, useState } from "react";
+import { useCallback, useContext, useRef, useState } from "react";
 import { ScrollView, StyleSheet, Text, useWindowDimensions, View } from "react-native";
 
 
@@ -31,14 +31,19 @@ export default function DetailScreen() {
 
   const colorScheme = getColorScheme();
 
-  if(recipeId === undefined || !(typeof(recipeId) === "string")){
-    useEffect(() => {notificationUpdate("Couldn't find recipe")}, [])
-    return <></>
-  }
+  // useEffect(() => {
+  //   if(recipeId === undefined || !(typeof(recipeId) === "string")){
+        
+  //   }
+  // }, [])  
 
   useFocusEffect(
     useCallback(() => {
       const getData = async () => {
+        if(recipeId === undefined || !(typeof(recipeId) === "string")){
+          notificationUpdate("Couldn't find recipe")
+          return
+        }
         const queriedRecipe = await getRecipeById( Number.parseInt(recipeId));
         if(queriedRecipe === null){
           notificationUpdate("Couldn't find recipe");
@@ -56,6 +61,10 @@ export default function DetailScreen() {
       getData();
     }, [])
   )
+
+  if(recipeId === undefined || !(typeof(recipeId) === "string")){
+    return <></>
+  }
 
   if(recipe === null){
     return <Text>Loading Recipe</Text>
