@@ -1,10 +1,10 @@
 import Notification from "@/components/general/notification";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
-import { createContext, useRef, useState } from "react";
+import { createContext, Dispatch, SetStateAction, useRef, useState } from "react";
 
 export const NotificationContext = createContext((text:string) => {});
-export const RefreshContext = createContext(useState(0));
+export const RefreshContext = createContext<[number, Dispatch<SetStateAction<number>>]>([0, () => {}]);
 
 export default function RootLayout() {
 
