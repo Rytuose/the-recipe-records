@@ -34,7 +34,7 @@ export default function SearchBar({setCriteria} : Props){
 
     return <View style = {[style.view, {backgroundColor:colorScheme.surfaceContainerHigh}]}>
       <BottomSheet isPresented={isPresented} onDismiss={() => {setIsPresented(false)}}>
-        <RecipeFilter/>
+        <RecipeFilter close={() => {setIsPresented(false)}}/>
       </BottomSheet>
       <ButtonWrapper width={ICON_DIMENSION} height={ICON_DIMENSION} noBorder={true} onPress={filterPress}>
         <Feather name="filter" size={ICON_SIZE}/>
