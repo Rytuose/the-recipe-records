@@ -36,14 +36,6 @@ export default function IngredientForm({position, initialQuantity, initialMeasur
 
     const colorScheme = getColorScheme();
 
-    const drag = Gesture.Pan().onChange((event) => {
-            shift(position, event.changeY);
-        }).onEnd(() => {
-            finalize(position);
-        }).onStart(() => {
-            select(position);
-        })
-
     const viewStyle = useAnimatedStyle(() => {  
         return {
             transform:[{
@@ -51,6 +43,14 @@ export default function IngredientForm({position, initialQuantity, initialMeasur
             }]
         }
     })
+
+    const drag = Gesture.Pan().onChange((event) => {
+            shift(position, event.changeY);
+        }).onEnd(() => {
+            finalize(position);
+        }).onStart(() => {
+            select(position);
+        })
 
     const displayInvalid = () => {
         notificationUpdate("This is not a recognized measurement and will not be considered when filtering by an amount of an ingredient.")

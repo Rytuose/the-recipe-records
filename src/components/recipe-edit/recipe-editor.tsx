@@ -1,4 +1,4 @@
-import { NotificationContext } from "@/app/_layout";
+import { NotificationContext, RefreshContext } from "@/app/_layout";
 import ImageDisplay, { ImagePair } from "@/components/details/image-display";
 import ButtonWrapper from "@/components/general/button-wrapper";
 import Category from "@/components/general/category";
@@ -46,6 +46,9 @@ export default function RecipeEditor({recipe, isUpdate}:Props) {
     ...recipe.instructions.map((value, index) => {
       return {instruction: value, key: index, height: INSTRUCTION_FORM_STARTING_HEIGHT};
     }),{instruction: "", key: recipe.instructions.length , height: INSTRUCTION_FORM_STARTING_HEIGHT}]);
+  const [cookingTimeMinutes, setCookingTimeMinutes] = useState<string>((recipe.cooking_time%60).toString());
+  const [cookingTimeHours, setCookingTimeHours] = useState<string>(Math.trunc(recipe.cooking_time/60).toString());
+
 
   //const [images, setImages] = useState<(string | null)[]>([null, ...recipe.images]) 
   //const [imagePaths, setImagePaths] = useState<string[]>(["", ...recipe.imagePaths])
@@ -63,6 +66,7 @@ export default function RecipeEditor({recipe, isUpdate}:Props) {
   )
   const {width} = useWindowDimensions();
   const notificationUpdate = useContext(NotificationContext);
+  let refresh = useContext(RefreshContext);
   const colorScheme = getColorScheme();
 
   const editTitle = () => {
@@ -95,6 +99,11 @@ export default function RecipeEditor({recipe, isUpdate}:Props) {
       }
     })
 
+    let totalMinutes = Number.parseInt(cookingTimeHours) * 60 + Number.parseInt(cookingTimeMinutes);
+    if (Number.isNaN(totalMinutes)){
+      totalMinutes = 0;
+    }
+
     recipe.name = title;
     recipe.website = website;
     recipe.author = author;
@@ -103,10 +112,12 @@ export default function RecipeEditor({recipe, isUpdate}:Props) {
     recipe.images = imageStrings;
     recipe.imagePaths = paths;
     recipe.deletedImages = deletedImages.map((value) => {return value});
+    recipe.cooking_time = totalMinutes;
 
     try{
       await addRecipe(recipe);
       notificationUpdate("Successfully saved recipe")
+      refresh[1](refresh[0] + 1)
     }
     catch(e){
       notificationUpdate("Error saving changes: " + e)
@@ -161,6 +172,40 @@ export default function RecipeEditor({recipe, isUpdate}:Props) {
           </View>
           <ImageDisplay images={imagePairs} deletedImages={deletedImages} 
             setImages={setImagePairs} setDeletedImages={setDeletedImages} editable={true} nextIdValue={imagePairs.length}/>
+          <View style={[style.row, {alignItems: 'center'}]}>
+            <Text style={{fontFamily: 'Body', fontSize: 15}}>Cooking Time:</Text>
+            <TextInput 
+              style={style.cookingTime}
+              value={cookingTimeHours}
+              onChangeText={(value) => {
+                setCookingTimeHours(value.replaceAll(/[^0-9]/g,""))
+              }}
+              onBlur={() => {
+                let hours = Number.parseInt(cookingTimeHours)
+                setCookingTimeHours((Number.isNaN(hours))?"0": hours.toString())
+              }}
+            />
+            <Text style={{fontFamily: 'Body', fontSize: 15}}>hours</Text>
+            <TextInput 
+              style={style.cookingTime}
+              value={cookingTimeMinutes}
+              onChangeText={(value) => {
+                setCookingTimeMinutes(value.replaceAll(/[^0-9]/g,""))
+              }}
+              onBlur={() => {
+                let minutes = Number.parseInt(cookingTimeMinutes)
+                let hours = Math.trunc(minutes / 60);
+                setCookingTimeMinutes((Number.isNaN(minutes))?"0": (minutes%60).toString())
+
+                if (hours > 0){
+                  let newHours = Number.parseInt(cookingTimeHours) + hours
+                  setCookingTimeHours(newHours.toString())
+                }
+                
+              }}
+            />
+            <Text style={{fontFamily: 'Body', fontSize: 15}}>minutes</Text>
+          </View>
           <View style={style.section}>
             <Text style={style.subtitle}>Ingredients (1x)</Text>
             <IngredientFormBuilder ingredients={ingredients} setIngredients={setIngredients}/>
@@ -240,5 +285,13 @@ export const style = StyleSheet.create({
   buttonText:{
     fontSize: 20,
     fontFamily: "Body"
+  },
+  cookingTime:{
+    borderWidth: 2,
+    padding: 5,
+    fontFamily: "Body",
+    flex: 1,
+    height: 25,
+    maxWidth: 75
   }
 })

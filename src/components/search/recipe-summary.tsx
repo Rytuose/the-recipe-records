@@ -38,6 +38,14 @@ export default function RecipeSummary({summary}:Props){
         setFavorite(!favorite);
     }
 
+    let timeString = "Time: "
+
+    if (summary.cooking_time / 60 >= 1){
+        timeString += Math.trunc(summary.cooking_time/60) + " hrs "
+    }
+
+    timeString += summary.cooking_time%60 + " mins"
+
     return <View style={[style.view, {backgroundColor: colorScheme.secondary}]}>
         <Pressable
         style={style.button}
@@ -45,7 +53,7 @@ export default function RecipeSummary({summary}:Props){
             <View style={style.horizontalView}>
                 <View style={{flex: 1}}>
                     <Text style={[style.titleText, {color: colorScheme.onSecondary}]}>{summary.name}</Text>
-                    <Text style={[style.bodyText,{color: colorScheme.onSecondary}]}>Time: {summary.cooking_time} hrs</Text>
+                    <Text style={[style.bodyText,{color: colorScheme.onSecondary}]}>{timeString}</Text>
                 </View>
                 <Image source={{uri: "data:image/png;base64," + summary.images}} style = {style.image}/>
                 <View>

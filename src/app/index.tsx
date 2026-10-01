@@ -7,8 +7,6 @@ export default function Index() {
 
   const notificationUpdate = useContext(NotificationContext);
 
-  console.log("Boot up?");
-
   useEffect(() => {StartUp(notificationUpdate)})
 
   return <Redirect href="/add" />;

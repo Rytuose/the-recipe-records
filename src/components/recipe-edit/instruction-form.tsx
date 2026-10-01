@@ -31,6 +31,14 @@ export default function InstructionForm({position, initialText, placeholder, tra
     const {width, height} = useWindowDimensions();
 
 
+    const viewStyle = useAnimatedStyle(() => {
+        return {
+            transform:[{
+                translateY: translateY.value[position]
+            }]
+        }
+    })
+
     const drag = Gesture.Pan().onChange((event) => {
         shift(position, event.changeY);
     }).onEnd(() => {
@@ -39,13 +47,7 @@ export default function InstructionForm({position, initialText, placeholder, tra
         select(position);
     })
 
-    const viewStyle = useAnimatedStyle(() => {
-        return {
-            transform:[{
-                translateY: translateY.value[position]
-            }]
-        }
-    })
+
 
     return <Animated.View style={[style.view, viewStyle, {height: inputHeight}]}>
         <TextInput
