@@ -102,6 +102,12 @@ export default function DetailScreen() {
 
   let portion = multipliers[selectedServingIndex]; 
 
+  let cookingTimeString = "Cooking Time: ";
+  if (Math.trunc(recipe.cooking_time / 60)){
+    cookingTimeString += Math.trunc(recipe.cooking_time / 60) + " hrs "
+  }
+  cookingTimeString += recipe.cooking_time%60 + " mins "
+
   return (
     <>
       <Stack.Screen options={{
@@ -144,6 +150,7 @@ export default function DetailScreen() {
               onCustomChange={onCustomChange}
             />
           </View>
+          <Text style={style.text}>{cookingTimeString}</Text>
           <View style={style.section}>
             <Text style={style.subtitle}>Ingredients</Text>
             <RecipeStepBuilder recipeSteps={recipe.ingredients.map(val => val.toString(portion))}/>

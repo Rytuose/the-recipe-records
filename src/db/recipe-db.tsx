@@ -1,6 +1,6 @@
 import { Ingredient } from '@/recipe/ingredient';
 import { baselineToMeasurement, measurementToBaseline } from '@/recipe/measurement';
-import { Recipe, RecipeSearchCriteria, RecipeSummaryDetail } from '@/recipe/recipe';
+import { printSearchCriteria, Recipe, RecipeSearchCriteria, RecipeSummaryDetail } from '@/recipe/recipe';
 import { invoke } from '@tauri-apps/api/core';
 import { Platform } from 'react-native';
 import { retrieveImages, storeImages } from './image-manager';
@@ -122,6 +122,11 @@ export async function getRecipes(){
 }
 
 export async function queryRecipes(criteria:RecipeSearchCriteria){
+
+    console.log("Query Recipe:");
+    printSearchCriteria(criteria);
+    
+
     if (Platform.OS === 'web'){
         try{
             let returnValue = await invoke<RecipeSummaryDetail[]>('query_recipes_desktop', {
@@ -138,7 +143,10 @@ export async function queryRecipes(criteria:RecipeSearchCriteria){
             
             return returnValue;
         }
-        catch(e){}
+        catch(e){
+            console.log("Error " + e)
+            return []
+        }
     }
 
     await MobileDatabase.queryRecipesMobile(criteria);

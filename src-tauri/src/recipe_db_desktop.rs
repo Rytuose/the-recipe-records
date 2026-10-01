@@ -23,8 +23,14 @@ pub struct RecipeSummaryDetail{
 }
 
 #[derive(serde::Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct RecipeSearchCriteria{
   name: String,
+  starred_valid: bool,
+  starred: bool,
+  time: i32,
+  time_comparator: String,
+  time_display_unit: String
 }
 
 #[derive(serde::Deserialize, Serialize)]
@@ -196,8 +202,8 @@ pub fn get_recipes_desktop() -> Vec<RecipeSummaryDetail> {
 
 #[tauri::command]
 pub fn query_recipes_desktop(criteria: RecipeSearchCriteria) -> Vec<RecipeSummaryDetail>{
-  println!("query recipes desktop {}", criteria.name);
-
+  println!("query recipes desktop");
+  
   let mut query = String::from("SELECT R.recipe_id, R.recipe_name, R.cooking_time, R.starred, R.images
         FROM recipes R
          ");
@@ -206,17 +212,32 @@ pub fn query_recipes_desktop(criteria: RecipeSearchCriteria) -> Vec<RecipeSummar
   let mut params: Vec<String> = Vec::new();
 
   if criteria.name != "" {
-    params.push(format!("%{}%", criteria.name));
+    params.push(format!("%{}%", criteria.name)); //Percent as wildcard
     query.push_str(&(format!("{} R.recipe_name LIKE ?{}", where_clause, params.len().to_string())));
     where_clause = " AND ";
   }
+
+  if criteria.starred_valid {
+    println!("Starred? {}", criteria.starred);
+    query.push_str(&(format!("{} R.starred = {}", where_clause, if criteria.starred {"1"} else {"0"})));
+    where_clause = " AND ";
+  }
+
+  if criteria.time_comparator != ""{
+    println!("Comparator {} {}", criteria.time_comparator, criteria.time);
+    params.push(criteria.time.to_string());
+    query.push_str(&(format!("{} R.cooking_time {} ?{}", where_clause, criteria.time_comparator, params.len().to_string())));
+    where_clause = " AND ";
+  }
+
+
 
   query.push_str("
    ORDER BY R.date_updated DESC
         LIMIT 20");
 
   println!("{}", query);
-  println!("{}", params.len());
+  println!("{}", params.join(","));
 
   let db = DB.lock().unwrap();
 

@@ -1,7 +1,8 @@
 import { getColorScheme } from "@/constants/color-scheme";
+import { RecipeSearchCriteria } from "@/recipe/recipe";
 import { Text, TextInput, useNativeState } from "@expo/ui";
+import AntDesign from "@expo/vector-icons/AntDesign";
 import Feather from "@expo/vector-icons/Feather";
-import Ionicons from "@expo/vector-icons/Ionicons";
 import { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import ButtonWrapper from "../general/button-wrapper";
@@ -11,32 +12,54 @@ const HEIGHT = 40
 const BORDER_RADIUS = 10
 
 type Props = {
+    criteria: RecipeSearchCriteria
     close: () => void
+    setCriteria: (recipes: RecipeSearchCriteria) => void
 }
 
-export default function RecipeFilter({close}:Props){
+export default function RecipeFilter({criteria, close, setCriteria}:Props){
 
     const starredOptions = ["--", "Starred", "Not Starred"]
     const comparisonOptions = ["<", "≤", "=", "≥", ">"]
-    const timeUnit = ["minutes", "hours"]
-    const [starred, setStarred] = useState<string>(starredOptions[0]);
-    const [cookingTimeComparison, setCookingTimeComparison] = useState<string>(comparisonOptions[1])
-    const [cookingTimeUnit, setCookingTimeUnit] = useState<string>(timeUnit[0])
-    const cookingTimeLength = useNativeState<string>("")
+    const timeUnit = ["minutes", "hours"]   
+    const [starred, setStarred] = useState<string>((criteria.starredValid)?(criteria.starred ? starredOptions[1]:starredOptions[2]):starredOptions[0]);
+    const [cookingTimeComparison, setCookingTimeComparison] = useState<string>((criteria.timeComparator === "")?comparisonOptions[1]:((criteria.timeComparator === "<=")?comparisonOptions[1]: ((criteria.timeComparator === ">=")?comparisonOptions[3]:criteria.timeComparator)))
+    const [cookingTimeUnit, setCookingTimeUnit] = useState<string>(criteria.timeDisplayUnit)
+    const cookingTimeLength = useNativeState<string>(criteria.timeComparator === "" ? "":(criteria.timeDisplayUnit === "minutes")?criteria.time.toString():(Math.round(criteria.time / 60)).toString())
     const [topDropdown,setTopDropdown] = useState<number>(-1);
-
-    console.log("Top Dropdown " + topDropdown);
     
     const colorScheme = getColorScheme();
 
     const setFilter = () => {
         console.log("Set Filter");
+
+        let cookingTime = Number.parseFloat(cookingTimeLength.value);
+        let invalid = false;
+        if(Number.isNaN(cookingTime)){
+            invalid = true;
+            cookingTime = 0;
+        }
+
+        if (cookingTimeUnit === 'hours'){
+            cookingTime *= 60;
+        }
+
+        setCriteria({
+            ...criteria,
+            starredValid: starred !== "--",
+            starred: starred === "Starred",
+            time: cookingTime,
+            timeComparator: (invalid)?"":((cookingTimeComparison === "≤") ? "<=" : (cookingTimeComparison === "≥") ? ">=" : cookingTimeComparison),
+            timeDisplayUnit: (invalid)?"minutes":cookingTimeUnit
+        });
         close();
     }
 
-    const cancelFilter = () => {
-        console.log("Cancel Filter");
-        close();
+    const resetFilter = () => {
+        setStarred(starredOptions[0]);
+        cookingTimeLength.value = ""
+        setCookingTimeComparison(comparisonOptions[1]);
+        setCookingTimeUnit(timeUnit[0])
     }
     
 
@@ -88,9 +111,9 @@ export default function RecipeFilter({close}:Props){
                 onOpen={() => {setTopDropdown(1)}}/>
         </View>
         <View style={[style.horizontalPair, {justifyContent: 'center'}]}>
-            <ButtonWrapper width={'40%'} onPress={cancelFilter} backgroundColor={colorScheme.tertiary}>
-                <Text textStyle={style.buttonText}>Cancel</Text>
-                <Ionicons name="close" size={24} color={colorScheme.onTertiary}/>
+            <ButtonWrapper width={'40%'} onPress={resetFilter} backgroundColor={colorScheme.tertiary}>
+                <Text textStyle={style.buttonText}>Reset</Text>
+                <AntDesign name="sync" size={24} color={colorScheme.onTertiary}/>
             </ButtonWrapper>
             <ButtonWrapper width={'40%'} onPress={setFilter} backgroundColor={colorScheme.primary}>
                 <Text textStyle={style.buttonText}>Filter</Text>

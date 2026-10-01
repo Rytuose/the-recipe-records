@@ -12,7 +12,15 @@ export default function SearchScreen() {
 
   
   const [recipes, setRecipes] = useState<RecipeSummaryDetail[]>([]);
-  const [searchCriteria, setSearchCriteria] = useState<RecipeSearchCriteria>({name: ""});
+  const [searchCriteria, setSearchCriteria] = useState<RecipeSearchCriteria>(
+    { name: "", 
+      starredValid: false, 
+      starred: false, 
+      time: 0, 
+      timeComparator: "", 
+      timeDisplayUnit: "minutes"
+    }
+  );
   const refresh = useContext(RefreshContext)
   
 
@@ -35,7 +43,7 @@ export default function SearchScreen() {
   return (
     <View style={[MAIN_STYLE.container,{paddingTop: 10, gap: 10}]}>
       <Text style={style.title}>Search Recipes</Text>
-      <RecipeSearchBar setCriteria={setSearchCriteria}/>
+      <RecipeSearchBar criteria={searchCriteria} setCriteria={setSearchCriteria}/>
       <RecipeScrollView recipes={recipes}/>
     </View>
   );
