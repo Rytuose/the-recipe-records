@@ -82,6 +82,7 @@ export default function IngredientForm({position, initialQuantity, initialMeasur
                 }}
                 onFocus={() => {setMeasurementOpen(true);}}
                 onBlur={() => {
+                    setMeasurementText(measurementText.trim())
                     setMeasurementOpen(false);
                     update(position, quantity, measurementText, ingredient);
                 }}

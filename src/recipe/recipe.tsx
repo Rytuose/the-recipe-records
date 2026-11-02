@@ -4,9 +4,9 @@ import { Ingredient } from "./ingredient";
 export class Recipe{
     id: number = NaN;
     name: string = "Food Name?";
-    website: string = "Website";
+    website: string = "Unknown";
     cooking_time: number = 0;
-    author: string = "Author";
+    author: string = "Unknown";
     starred: boolean = false;
     categories: string[] = [];
     images: string[] = [];

@@ -1,3 +1,4 @@
+import { Trie } from "@/components/general/trie";
 
 const MEASUREMENT_NAMES = ["", 
     "teaspoon", "teaspoons", "t", "tsp",
@@ -12,6 +13,8 @@ const MEASUREMENT_NAMES = ["",
     "gram", "grams", "g"
 ];
 
+let measurementTrie:Trie|null = null
+
 export function getRecommendations(str:string){
     let text = str.toLowerCase();
     return MEASUREMENT_NAMES.filter((value, index) => {
@@ -21,6 +24,35 @@ export function getRecommendations(str:string){
 
 export function validMeasurement(str:string){
     return MEASUREMENT_NAMES.includes(str.toLowerCase())
+}
+
+export function parseMeasurement(str:string){
+    if (measurementTrie == null){
+        measurementTrie = new Trie(MEASUREMENT_NAMES)
+    }
+
+    let currentLength = 0
+    let longestPos = 0;
+    let pos = measurementTrie.root
+    for (let char of str){
+        char = char.toLocaleLowerCase()
+        
+        if (pos.map.has(char)){
+            currentLength += 1;       
+            pos = pos.map.get(char)!       
+            if (pos.valid && (currentLength >= str.length || str.charAt(currentLength) == " ")){
+                longestPos = currentLength;
+            }
+        }
+        else{
+            break
+        }
+    }
+
+    return str.substring(0, longestPos);
+
+
+
 }
 
 

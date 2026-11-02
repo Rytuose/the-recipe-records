@@ -51,12 +51,12 @@ export async function addRecipe(recipe:Recipe){
         try{
             let imagePaths = await storeImages(recipe.images, recipe.imagePaths, recipe.deletedImages)
             
-            console.log("Image Paths Added");
+            console.log("Image Paths Added for recipe id: " + recipe.id);
             
             
             await invoke('add_recipe_desktop',
                 {
-                    recipeId: Number.isNaN(recipe.id)?-1:recipe.id,
+                    recipeId: (Number.isNaN(recipe.id) || recipe.id === null)?-1:recipe.id,
                     recipeName: recipe.name,
                     website: recipe.website,
                     cookingTime: recipe.cooking_time,
@@ -76,7 +76,7 @@ export async function addRecipe(recipe:Recipe){
             return;
         }
         catch(e){
-            console.log("Web Error");
+            console.log("Web Error " + e);
         }
     }
 
