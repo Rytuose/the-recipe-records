@@ -35,8 +35,8 @@ export type Props = {
 
 export default function RecipeEditor({recipe, isUpdate}:Props) {
 
-  const website = recipe.website;
-  const author = recipe.author;
+  const [website, setWebsite] = useState<string>(recipe.website);
+  const [author, setAuthor] = useState<string>(recipe.author);
   const [title, setTitle] = useState<string>(recipe.name);
   const [ingredients, setIngredients] = useState<IngredientPair[]>([
     ...recipe.ingredients.map((value, index) => {
@@ -163,7 +163,24 @@ export default function RecipeEditor({recipe, isUpdate}:Props) {
         <ScrollView 
         style = {{width: width}}
         contentContainerStyle={style.scrollView}>
-          <Text style={style.text}>{"From: " + website + "\nBy: " + author}</Text>
+          <View style={{gap: 5}}>
+            <View style={[style.row, {alignItems: 'center'}]}>
+              <Text style={{fontFamily: 'Body', fontSize: 15, width: 65}}>Website:</Text>
+              <TextInput
+                style={style.recipeOverview}
+                value={website}
+                onChangeText={setWebsite}
+              />
+            </View>
+            <View style={[style.row, {alignItems: 'center'}]}>
+              <Text style={{fontFamily: 'Body', fontSize: 15, width: 65}}>Author:</Text>
+              <TextInput
+                style={style.recipeOverview}
+                value={author}
+                onChangeText={setAuthor}
+              />
+            </View>
+          </View>
           <Text style={[style.subtitle, {marginHorizontal: DETAIL_HORIZONTAL_MARGIN}]}>Categories</Text>
           <View style={[style.row,{flexWrap: 'wrap'}]}>
             <Category editable={true}/>
@@ -293,5 +310,13 @@ export const style = StyleSheet.create({
     flex: 1,
     height: 25,
     maxWidth: 75
+  },
+  recipeOverview:{
+    borderWidth: 1,
+    padding: 5,
+    fontFamily: "Body",
+    flex: 1,
+    height: 25,
+    maxWidth: 300
   }
 })

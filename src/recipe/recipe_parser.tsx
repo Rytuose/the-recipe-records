@@ -267,7 +267,6 @@ function parseTime(lines: string[], end: number){
             break
         }
         if (line.toLowerCase().trim().startsWith('total time')){
-            //TODO: Take care of case where time is on next line with total time
 
             let parsedLine = line.trim().substring(10).trim().split(/([0-9]+)/).filter((value) => {
                 return value != "";
