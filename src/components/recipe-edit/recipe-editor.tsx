@@ -16,6 +16,7 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { router, Stack } from "expo-router";
 import { useContext, useRef, useState } from "react";
 import { ScrollView, StyleSheet, Text, TextInput, useWindowDimensions, View } from "react-native";
+import { NOTIFICATION_ERROR, NOTIFICATION_SUCCESS } from "../general/notification";
 
 export type IngredientPair = {
     ingredient: Ingredient
@@ -116,11 +117,11 @@ export default function RecipeEditor({recipe, isUpdate}:Props) {
 
     try{
       await addRecipe(recipe);
-      notificationUpdate("Successfully saved recipe")
+      notificationUpdate("Successfully saved recipe", NOTIFICATION_SUCCESS)
       refresh[1](refresh[0] + 1)
     }
     catch(e){
-      notificationUpdate("Error saving changes: " + e)
+      notificationUpdate("Error saving changes: " + e, NOTIFICATION_ERROR)
     }
     
     router.back();

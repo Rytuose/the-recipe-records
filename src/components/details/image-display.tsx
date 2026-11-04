@@ -5,6 +5,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import * as ImagePicker from 'expo-image-picker';
 import { useCallback, useContext, useEffect, useRef } from "react";
 import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
+import { NOTIFICATION_ERROR } from "../general/notification";
 import ImageNotFound from "./image-not-found";
 import RecipeImage from "./recipe-image";
 
@@ -37,8 +38,6 @@ export default function ImageDisplay({images, deletedImages, editable, nextIdVal
     const nextId = useRef<number>(nextIdValue);
     
     //const [images, setImages] = useState<(ImagePicker.ImagePickerAsset | null)[]>([null]) 
-
-    //TODO: store in expo file system?
     
     useEffect(() => {console.log("Rerender image display");
     })
@@ -51,7 +50,7 @@ export default function ImageDisplay({images, deletedImages, editable, nextIdVal
         })
 
         if(result.canceled){
-            notificationUpdate("No Photo Selected")
+            notificationUpdate("No Photo Selected", NOTIFICATION_ERROR)
         }
         else{
             //TODO: Case when base64 is null
@@ -82,7 +81,7 @@ export default function ImageDisplay({images, deletedImages, editable, nextIdVal
         }
 
         if (deleteIndex === -1){
-            notificationUpdate("Couldn't delete photo")
+            notificationUpdate("Couldn't delete photo", NOTIFICATION_ERROR)
         }
 
         //const deleteIndex = imageIds.indexOf(key)

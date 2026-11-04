@@ -27,9 +27,10 @@ const vulgarFractions = new Map([
 ])
 
 
-export async function parseRecipe(recipeString: String){
+export async function parseRecipe(recipeString: String):Promise<[Recipe, string]>{
 
     let recipe = new Recipe();
+    let failures: string[] = []
 
     let lines = recipeString.split("\n").filter((i) => {return i})
 
@@ -68,24 +69,60 @@ export async function parseRecipe(recipeString: String){
         if (end == -1){
             end = lines.length
         }
-        recipe.ingredients = parseIngredientsFocused(lines, start, end)
+
+        let [recipeIngredients, ingredientSuccess] = parseIngredientsFocused(lines, start, end)
+        recipe.ingredients = recipeIngredients
+        if (!ingredientSuccess){
+            failures.push("Ingredients")
+        }
+    }
+    else{
+        failures.push("Ingredients")
     }
 
     if (instructions.length == 1){
-        recipe.instructions = parseInstrutions(lines, instructions[0])
+        let [recipeInstructions, instructionSuccess] = parseInstrutions(lines, instructions[0])
+        recipe.instructions = recipeInstructions
+        if (!instructionSuccess){
+            failures.push("Instructions")
+        }
+    }
+    else{
+        failures.push("Instructions")
     }
 
-    recipe.cooking_time = parseTime(lines, lines.length)
+    let [cooking_time, timeSuccess] = parseTime(lines, lines.length)
+    
+    recipe.cooking_time = cooking_time
+    if (!timeSuccess){
+        failures.push("Cooking Time")
+    }
 
     if (author.length > 0){
-        recipe.author = parseAuthor(lines, author)
+        let [recipeAuthor, authorSuccess] = parseAuthor(lines, author)
+        recipe.author = recipeAuthor
+        if (!authorSuccess){
+            failures.push("Author")
+        }
+    }
+    else{
+        failures.push("Author")
     }
 
-    return recipe
+    let errorString = ""
+    if (failures.length > 0){
+        errorString += "Failed to parse:"
+        for (let val of failures){
+            errorString += " " + val + ","
+        }
+        errorString = errorString.substring(0, errorString.length - 1)
+    }
+
+    return [recipe, errorString]
 }
 
 
-function parseIngredientsFocused(lines: string[], start:number, end:number){
+function parseIngredientsFocused(lines: string[], start:number, end:number):[Ingredient[], boolean]{
     let notedLines:string[] = []
     let indentedLines:string[] = []
     let regex = /^\s*/;
@@ -114,13 +151,13 @@ function parseIngredientsFocused(lines: string[], start:number, end:number){
         return parseIngredients(indentedLines)
     }
 
-    return []
+    return [[], false]
     // Default to traditional methods??
 
 
 }
 
-function parseIngredients(lines: string[]){
+function parseIngredients(lines: string[]):[Ingredient[], boolean]{
 
     let ingredientList: Ingredient[] = []
     let regex = /^[\s▢]*/; //TODO: make this regex better to include letters,numbers,fractions instead of whitespace & checkbox
@@ -133,7 +170,7 @@ function parseIngredients(lines: string[]){
         }
         ingredientList.push(parseIngredient(ingredient))
     })
-    return ingredientList
+    return [ingredientList, true]
     
 }
 
@@ -219,7 +256,7 @@ function parseIngredient(string: string){
 
 }
 
-function parseInstrutions(lines: string[], start:number){
+function parseInstrutions(lines: string[], start:number):[string[], boolean]{
     let indentedLines:string[] = []
     let regex = /^\s*/;
     let indent = lines[start].match(regex);
@@ -251,16 +288,16 @@ function parseInstrutions(lines: string[], start:number){
         for (let line of indentedLines){
             console.log(line);
         }
-        return indentedLines;
+        return [indentedLines, true];
     }
 
-    return [];
+    return [[], false];
 
     // TODO Check for numbered list (for both ingredients and instructions probably in a shared function) 
 
 }
 
-function parseTime(lines: string[], end: number){
+function parseTime(lines: string[], end: number):[number, boolean]{
     let count = 0
     for (const line of lines){
         if (count == end){
@@ -303,17 +340,17 @@ function parseTime(lines: string[], end: number){
             }
 
             if (time > 0){
-                return time;
+                return [time, true];
             }
         }
         count ++
     }
 
 
-    return 0;
+    return [0, false];
 }
 
-function parseAuthor(lines: string[], author: number[]){
+function parseAuthor(lines: string[], author: number[]):[string, boolean]{
     let words = lines[author[0]].split(/\s+/)
     let string = ""
     if (words.length > 1){
@@ -335,6 +372,6 @@ function parseAuthor(lines: string[], author: number[]){
             pos ++
         }
     }
-    return string
+    return [string, string !== ""]
     
 }

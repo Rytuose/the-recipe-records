@@ -2,6 +2,7 @@ import { NotificationContext } from "@/app/_layout";
 import ImageDisplay, { ImagePair } from "@/components/details/image-display";
 import ButtonWrapper from "@/components/general/button-wrapper";
 import Category from "@/components/general/category";
+import { NOTIFICATION_ERROR } from "@/components/general/notification";
 import SegmentedButton from "@/components/general/segmented-button";
 import RecipeStepBuilder from "@/components/search-details/recipe-step-builder";
 import { getColorScheme } from "@/constants/color-scheme";
@@ -41,12 +42,12 @@ export default function DetailScreen() {
     useCallback(() => {
       const getData = async () => {
         if(recipeId === undefined || !(typeof(recipeId) === "string")){
-          notificationUpdate("Couldn't find recipe")
+          notificationUpdate("Couldn't find recipe", NOTIFICATION_ERROR)
           return
         }
         const queriedRecipe = await getRecipeById( Number.parseInt(recipeId));
         if(queriedRecipe === null){
-          notificationUpdate("Couldn't find recipe");
+          notificationUpdate("Couldn't find recipe", NOTIFICATION_ERROR);
           return;
         }
         setRecipe(queriedRecipe);
@@ -86,7 +87,7 @@ export default function DetailScreen() {
       router.navigate("/search");
     }
     catch(e){
-      notificationUpdate("Error: " + e);
+      notificationUpdate("Error: " + e, NOTIFICATION_ERROR);
     }
   }
 
