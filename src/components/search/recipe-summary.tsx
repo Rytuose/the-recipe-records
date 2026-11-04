@@ -1,5 +1,4 @@
 
-import { NotificationContext } from '@/app/_layout';
 import { getColorScheme } from '@/constants/color-scheme';
 import { RECIPE_SUMMARY_WIDTH } from '@/constants/constants';
 import { starRecipe } from '@/db/recipe-db';
@@ -7,7 +6,7 @@ import { RecipeSummaryDetail } from '@/recipe/recipe';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Image } from 'expo-image';
 import { router } from "expo-router";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
 const RECIPE_SUMMARY_HEIGHT = 150;
@@ -21,7 +20,6 @@ type Props = {
 export default function RecipeSummary({summary}:Props){
     
     const [favorite, setFavorite] = useState<Boolean>(summary.starred);
-    const notificationUpdate = useContext(NotificationContext);
 
     const colorScheme = getColorScheme();
     const favoriteName = (favorite)? 'star': 'star-o';

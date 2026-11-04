@@ -9,6 +9,7 @@ import { StyleSheet, TextInput, View } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, { SharedValue, useAnimatedStyle } from "react-native-reanimated";
 import ButtonWrapper from "../general/button-wrapper";
+import { NOTIFICATION_WARNING } from "../general/notification";
 import { applyNumberRegex } from "../misc/number-regex";
 
 
@@ -53,7 +54,7 @@ export default function IngredientForm({position, initialQuantity, initialMeasur
         })
 
     const displayInvalid = () => {
-        notificationUpdate("This is not a recognized measurement and will not be considered when filtering by an amount of an ingredient.")
+        notificationUpdate("This is not a recognized measurement and will not be considered when filtering by an amount of an ingredient.", NOTIFICATION_WARNING)
     }
 
     return <Animated.View style={[style.view, viewStyle]}>

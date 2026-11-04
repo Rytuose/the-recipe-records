@@ -1,3 +1,4 @@
+import { NOTIFICATION_ERROR } from '@/components/general/notification';
 import { initDatabase } from '@/db/recipe-db';
 import { Redirect } from 'expo-router';
 import { useContext, useEffect } from 'react';
@@ -12,14 +13,14 @@ export default function Index() {
   return <Redirect href="/add" />;
 }
 
-async function StartUp(notification:(text:string)=>void){
+async function StartUp(notification:(text:string, color:string)=>void){
   try {
     //await deleteDatabaseMobile();
     //await deleteDatabase(); // For testing purposes
     await initDatabase();
   }
   catch(e){
-    notification("Error: Could not load database " + e);
+    notification("Error: Could not load database " + e, NOTIFICATION_ERROR);
   }
 }
 

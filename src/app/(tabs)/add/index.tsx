@@ -1,11 +1,13 @@
+import { NotificationContext } from "@/app/_layout";
 import RecipeInput from "@/components/add/recipe-input";
 import ButtonWrapper from "@/components/general/button-wrapper";
+import { NOTIFICATION_WARNING } from "@/components/general/notification";
 import { getColorScheme } from "@/constants/color-scheme";
 import { MAIN_STYLE } from "@/constants/styles";
 import { parseRecipe } from "@/recipe/recipe_parser";
 import Feather from "@expo/vector-icons/Feather";
 import { useRouter } from "expo-router";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { ScrollView, StyleSheet, Text, useWindowDimensions, View } from "react-native";
 
 const BUTTON_WIDTH = 175;
@@ -16,6 +18,7 @@ export default function AddScreen() {
   const colorScheme = getColorScheme();
   const router = useRouter();
   const {width} = useWindowDimensions();
+  const notificationUpdate = useContext(NotificationContext)
 
   const [data, setData] = useState<string>("");
 
@@ -23,8 +26,12 @@ export default function AddScreen() {
     //router.navigate("/add/details");
     //console.log("Attempting to link to " + websiteURL);
 
-    let recipe = await parseRecipe(data);
+    let [recipe, error] = await parseRecipe(data);
     
+    if (error.length > 0){
+      notificationUpdate(error, NOTIFICATION_WARNING);
+    }
+
     //TODO: Get a better way to pass this so it isn't in the path/search bar
     //TODO: Notification for each thing that parser was unable to parse
 

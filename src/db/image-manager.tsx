@@ -72,8 +72,6 @@ export async function storeImages(images:string[], paths:string[], deletePaths:s
         }
     }
 
-    //TODO: Delete Images
-
     console.log("Image Paths " + imagePaths);
     
     return imagePaths
