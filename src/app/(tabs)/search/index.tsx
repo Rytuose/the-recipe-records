@@ -5,12 +5,12 @@ import RecipeSearchBar from "@/components/search/recipe-search-bar";
 import { MAIN_STYLE } from "@/constants/styles";
 import { queryRecipes } from "@/db/recipe-db";
 import { RecipeSearchCriteria, RecipeSummaryDetail } from "@/recipe/recipe";
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 
 export default function SearchScreen() {
-
-  
+  const refreshCount = useRef<number>(0);
+  const loading = useRef<boolean>(false);
   const [recipes, setRecipes] = useState<RecipeSummaryDetail[]>([]);
   const [searchCriteria, setSearchCriteria] = useState<RecipeSearchCriteria>(
     { name: "", 
@@ -31,20 +31,24 @@ export default function SearchScreen() {
         setRecipes(queriedRecipes);
       };
 
+      loading.current = true;
       getData();
+      loading.current = false;
+
+      refreshCount.current ++;
 
       console.log("Updating Recipes");
-      
 
       return () => {};
     }, [searchCriteria])
   ,[searchCriteria, refresh[0]]);
 
+
   return (
     <View style={[MAIN_STYLE.container,{paddingTop: 10, gap: 10}]}>
       <Text style={style.title}>Search Recipes</Text>
       <RecipeSearchBar criteria={searchCriteria} setCriteria={setSearchCriteria}/>
-      <RecipeScrollView recipes={recipes}/>
+      {!loading.current && <RecipeScrollView recipes={recipes} refresh={refreshCount.current}/>}
     </View>
   );
 }

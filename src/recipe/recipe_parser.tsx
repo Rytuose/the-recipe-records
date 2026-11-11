@@ -245,7 +245,7 @@ function parseIngredient(string: string){
     //console.log("\t Remaining String |" + string + "|");
     
     let ingredient = new Ingredient();
-    ingredient.quantity = amount;
+    ingredient.quantity = parseFloat(amount.toFixed(4));
     ingredient.measurement = measurement;
     ingredient.name = string;
 

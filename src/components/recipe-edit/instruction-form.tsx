@@ -26,6 +26,8 @@ export default function InstructionForm({position, initialText, placeholder, tra
     const colorScheme = getColorScheme();
 
     let prevHeight = inputHeight;
+    console.log("Rerender");
+    
 
     // Causes re-render on window change
     const {width, height} = useWindowDimensions();
@@ -48,17 +50,24 @@ export default function InstructionForm({position, initialText, placeholder, tra
     })
 
 
-
     return <Animated.View style={[style.view, viewStyle, {height: inputHeight}]}>
+        {/* <textarea style={{fieldSizing: 'content'}}></textarea> */}
         <TextInput
+            
             style={[style.textInput,{height: inputHeight, backgroundColor:colorScheme.surfaceContainerHigh}]}
             placeholder={placeholder}
             value = {text}
             textAlignVertical="top"
             multiline
-            onChangeText={setText}
+            onChangeText={(text) => {
+                //Maybe this doesn't have time to update before oncontentsizechange is called
+                setText(text)}}
             onContentSizeChange={(event) => {
                 let newHeight = event.nativeEvent.contentSize.height;
+                console.log("height " + newHeight);
+                console.log(text);
+                
+                
                 if (newHeight < prevHeight){
                     // Causes a re-trigger with the correct height
                     newHeight = 0;

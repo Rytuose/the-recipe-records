@@ -10,12 +10,12 @@ import { DETAIL_HORIZONTAL_MARGIN } from "@/constants/constants";
 import { MAIN_STYLE } from "@/constants/styles";
 import { deleteRecipe, getRecipeById } from "@/db/recipe-db";
 import { Recipe } from "@/recipe/recipe";
+import { openLink } from "@/window-opener/link-opener";
 import Feather from "@expo/vector-icons/Feather";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { router, Stack, useFocusEffect, useLocalSearchParams } from "expo-router";
 import { useCallback, useContext, useRef, useState } from "react";
-import { ScrollView, StyleSheet, Text, useWindowDimensions, View } from "react-native";
-
+import { Platform, Pressable, ScrollView, StyleSheet, Text, useWindowDimensions, View } from "react-native";
 
 
 export default function DetailScreen() {
@@ -101,6 +101,28 @@ export default function DetailScreen() {
     setMultipliers(newMulitpliers);
   }
 
+  const visitWebsite = async () => {
+    console.log("opening link");
+
+    if(URL.canParse(recipe.website)){
+      let url = URL.parse(recipe.website);
+      if (url?.protocol === "https:"){
+        if (Platform.OS === 'web'){
+          try{
+            let result = await openLink(recipe.website);
+            if (!result){
+              notificationUpdate("Error opening website", NOTIFICATION_ERROR)
+            }
+          }
+          catch(e){
+            notificationUpdate("Error opening website", NOTIFICATION_ERROR)
+          }
+        }
+      }
+    }
+
+  }
+
   let portion = multipliers[selectedServingIndex]; 
 
   let cookingTimeString = "Cooking Time: ";
@@ -108,6 +130,8 @@ export default function DetailScreen() {
     cookingTimeString += Math.trunc(recipe.cooking_time / 60) + " hrs "
   }
   cookingTimeString += recipe.cooking_time%60 + " mins "
+
+  let validUrl = URL.canParse(recipe.website);
 
   return (
     <>
@@ -124,7 +148,19 @@ export default function DetailScreen() {
         <ScrollView 
         style = {{width: width}}
         contentContainerStyle={style.scrollView}>
-          <Text style={style.text}>{`From: ${recipe.website}\nBy: ${recipe.author}`}</Text>
+          <View>
+            {recipe.website.length > 0 && 
+            <View style={{flexDirection:'row'}}>
+              <Text style={[style.text, {marginRight: 0}]}>{`From: `}</Text>
+              {!validUrl && <Text style={[style.text, {marginLeft: 0}]}>{recipe.website}</Text>}
+              {validUrl && 
+              <Pressable onPress={visitWebsite}>
+                <Text style={style.websiteText}>{recipe.website}</Text>
+              </Pressable>}
+            </View>}
+            {recipe.author.length > 0 && <Text style={style.text}>{`By: ${recipe.author}`}</Text>}
+          </View>
+
           <View style={[style.row,{flexWrap: 'wrap'}]}>
             <Category/>
             <Category editable={true}/>
@@ -196,6 +232,12 @@ export const style = StyleSheet.create({
   buttonText:{
     fontSize: 15,
     fontFamily:"Body"
+  },
+  websiteText:{
+    fontSize: 15,
+    fontFamily:"Body",
+    textDecorationLine: 'underline',
+    color: '#0000FF'
   }
 
 })

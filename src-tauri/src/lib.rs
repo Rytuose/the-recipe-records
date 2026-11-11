@@ -1,4 +1,5 @@
 mod recipe_db_desktop;
+mod open_website;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
@@ -21,8 +22,10 @@ pub fn run() {
       recipe_db_desktop::get_recipes_desktop,
       recipe_db_desktop::get_recipe_by_id_desktop,
       recipe_db_desktop::star_recipe_desktop,
-      recipe_db_desktop::query_recipes_desktop])
+      recipe_db_desktop::query_recipes_desktop,
+      open_website::open_website])
     .plugin(tauri_plugin_fs::init())
+    .plugin(tauri_plugin_opener::init())
     .run(tauri::generate_context!())
     .expect("error while running tauri application");
 }
