@@ -1,7 +1,7 @@
 import { getColorScheme } from "@/constants/color-scheme";
 import { MAIN_STYLE } from "@/constants/styles";
 import AntDesign from '@expo/vector-icons/AntDesign';
-import { PropsWithChildren, useState } from "react";
+import { PropsWithChildren, useRef, useState } from "react";
 import { StyleSheet, TextInput, useWindowDimensions, View } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, { SharedValue, useAnimatedStyle } from "react-native-reanimated";
@@ -22,11 +22,11 @@ export default function InstructionForm({position, initialText, placeholder, tra
 
     const [inputHeight, setInputHeight] = useState(0);
     const [text, setText] = useState<string>(initialText);
+    const setup = useRef<Boolean>(false);
 
     const colorScheme = getColorScheme();
 
     let prevHeight = inputHeight;
-    console.log("Rerender");
     
 
     // Causes re-render on window change
@@ -59,14 +59,9 @@ export default function InstructionForm({position, initialText, placeholder, tra
             value = {text}
             textAlignVertical="top"
             multiline
-            onChangeText={(text) => {
-                //Maybe this doesn't have time to update before oncontentsizechange is called
-                setText(text)}}
+            onChangeText={(text) => {setText(text)}}
             onContentSizeChange={(event) => {
                 let newHeight = event.nativeEvent.contentSize.height;
-                console.log("height " + newHeight);
-                console.log(text);
-                
                 
                 if (newHeight < prevHeight){
                     // Causes a re-trigger with the correct height
@@ -75,7 +70,11 @@ export default function InstructionForm({position, initialText, placeholder, tra
                 
                 setInputHeight(newHeight);
                 prevHeight = newHeight;
-                update(position, text, newHeight);
+
+                if (!setup.current){
+                    setup.current = true;
+                    update(position, text, newHeight);
+                }
             }}
             onBlur={() => {
                 update(position, text, inputHeight);
