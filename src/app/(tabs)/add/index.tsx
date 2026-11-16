@@ -5,6 +5,7 @@ import { NOTIFICATION_WARNING } from "@/components/general/notification";
 import { getColorScheme } from "@/constants/color-scheme";
 import { MAIN_STYLE } from "@/constants/styles";
 import { parseRecipe } from "@/recipe/recipe_parser";
+import AntDesign from "@expo/vector-icons/AntDesign";
 import Feather from "@expo/vector-icons/Feather";
 import { useRouter } from "expo-router";
 import { useContext, useState } from "react";
@@ -38,7 +39,7 @@ export default function AddScreen() {
     router.navigate({pathname: "/add/details", params:{recipe: JSON.stringify(recipe)}})
   }
 
-  const writeRecipe = () => {
+  const writeRecipe = async () => {
     router.navigate("/add/details");
   }
 
@@ -51,8 +52,8 @@ export default function AddScreen() {
           <Text style={style.subtitle}>Paste a recipe</Text>
           <RecipeInput data={data} setData={setData}/>
           <ButtonWrapper width={BUTTON_WIDTH} onPress={linkRecipe} backgroundColor={colorScheme.primary}>
-            <Feather name={"send"} size={20} color={colorScheme.onPrimary}/>
-            <Text style={[style.buttonText, {color: colorScheme.onPrimary}]}>Go!</Text>
+            <AntDesign name={"file-search"} size={20} color={colorScheme.onPrimary}/>
+            <Text style={[style.buttonText, {color: colorScheme.onPrimary}]}>Parse Text</Text>
           </ButtonWrapper>
           <ButtonWrapper width={BUTTON_WIDTH} onPress={writeRecipe} backgroundColor={colorScheme.primary}>
             <Feather name={"pen-tool"} size={20} color={colorScheme.onPrimary}/>

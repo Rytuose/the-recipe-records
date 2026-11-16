@@ -21,7 +21,7 @@ export default function TabLayout() {
           fontSize: 15
         },
         tabBarActiveTintColor: getColorScheme().primary,
-        tabBarIcon: ({color}) => (<Ionicons name="home-sharp" size={30} color={color} />)
+        tabBarIcon: ({color}) => (<Ionicons name="add-sharp" size={30} color={color} />)
       }}
     />
     <Tabs.Screen 

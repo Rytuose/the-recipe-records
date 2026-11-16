@@ -6,10 +6,10 @@ type Props = {
 }
 
 export default function RecipeStep({text}:Props){
+    
     return <View style={style.view}>
         <Checkbox checkboxSize={30}/>
-        {/*TODO: Wrapping works with long string but not long words with no spaces to break*/}
-        <Text style={style.text}>{text}</Text>
+        <Text style={[style.text]}>{text}</Text>
     </View>
 }
 
@@ -21,6 +21,9 @@ export const style = StyleSheet.create({
     text:{
         fontSize: 20,
         marginTop: 1,
-        fontFamily:"Body"
+        fontFamily:"Body",
+        flexShrink: 1,
+        //@ts-ignore
+        wordBreak: 'break-all'
     }
 })

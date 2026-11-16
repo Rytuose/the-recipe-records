@@ -26,6 +26,7 @@
     {
       "identifier":"fs:allow-remove",
       "allow": ["$APPDATA/**"]
-    }
+    },
+    "opener:allow-default-urls"
   ]
 }

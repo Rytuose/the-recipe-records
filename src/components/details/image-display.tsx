@@ -3,7 +3,7 @@ import { getColorScheme } from "@/constants/color-scheme";
 import { IMAGE_HEIGHT } from "@/constants/constants";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import * as ImagePicker from 'expo-image-picker';
-import { useCallback, useContext, useEffect, useRef } from "react";
+import { useCallback, useContext, useRef } from "react";
 import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 import { NOTIFICATION_ERROR } from "../general/notification";
 import ImageNotFound from "./image-not-found";
@@ -39,8 +39,6 @@ export default function ImageDisplay({images, deletedImages, editable, nextIdVal
     
     //const [images, setImages] = useState<(ImagePicker.ImagePickerAsset | null)[]>([null]) 
     
-    useEffect(() => {console.log("Rerender image display");
-    })
 
     const addPhoto = useCallback(async () => {
         let result = await ImagePicker.launchImageLibraryAsync({

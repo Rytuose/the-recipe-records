@@ -67,7 +67,7 @@ export default function IngredientForm({position, initialQuantity, initialMeasur
                 setQuantity(applyNumberRegex(text));
             }}
             onBlur={() => {
-                let val = (quantity.length === 0)? -1: parseFloat(quantity);
+                let val = (quantity.length === 0)? -1: parseFloat((quantity)).toFixed(4);
                 val = (val === 0)? -1: val;
                 setQuantity(val.toString());
                 update(position, val.toString(), measurementText, ingredient);

@@ -8,7 +8,7 @@ import { InstructionPair } from "./recipe-editor";
 
 type Props = {
     instructions: InstructionPair[],
-    setInstructions: (instructions:InstructionPair[]) => void
+    setInstructions: React.Dispatch<React.SetStateAction<InstructionPair[]>>;
 }
 
 const INSTRUCTION_GAP = 5;
@@ -29,26 +29,28 @@ export default function InstructionFormBuilder(props: Props){
     const updateInstruction = (position: number, value: string, height: number) => {
         if(value !== instructions[position].instruction || height !== instructions[position].height){
 
-            let newInstructions = instructions.map((val, index) => {
+            setInstructions(prev => {
+                let newInstructions = prev.map((val, index) => {
                 if(index === position){
-                    return {...val, instruction: value, height: height}
+                        return {...val, instruction: value, height: height}
+                    }
+                    return val;
+                })
+
+                // Since newInstructions is not a state variable, we can modify it freely
+                if (position === prev.length - 1){
+                    keyCounter.current++;
+                    newInstructions.push({instruction:"", key: keyCounter.current, height: INSTRUCTION_FORM_STARTING_HEIGHT});
+                    translateY.value = [...translateY.value, 0];
                 }
-                return val;
-            })
-
-            // Since newInstructions is not a state variable, we can modify it freely
-            if (position === instructions.length - 1){
-                keyCounter.current++;
-                newInstructions.push({instruction:"", key: keyCounter.current, height: INSTRUCTION_FORM_STARTING_HEIGHT});
-                translateY.value = [...translateY.value, 0];
-            }
-            if (value === ""){
-                newInstructions = newInstructions.filter((val, index) => {return index !== position})
-                translateY.value = translateY.value.filter((val, index) => {return index !== position})
-            }
-
-            setInstructions(newInstructions);             
+                if (value === ""){
+                    newInstructions = newInstructions.filter((val, index) => {return index !== position})
+                    translateY.value = translateY.value.filter((val, index) => {return index !== position})
+                }
+                return newInstructions
+            });            
         }  
+        
     }
 
     const select = (position:number) => {
@@ -67,6 +69,7 @@ export default function InstructionFormBuilder(props: Props){
             if(index === instructions.length - 1){
                 return;
             }
+            
             totalHeight += value.height;
             if(index < position){
                 startingHeight += value.height + INSTRUCTION_GAP;

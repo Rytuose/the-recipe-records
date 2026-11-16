@@ -131,9 +131,11 @@ pub fn add_recipe_desktop(mut recipe_id: i64, recipe_name: String, website: Stri
                 cooking_time = ?2,
                 date_updated = ?3,
                 instructions = ?4,
-                images = ?5
-            WHERE recipe_id = ?6", 
-            [recipe_name, cooking_time.to_string(),date_updated.to_string(), instructions, images, recipe_id.to_string()]).unwrap();
+                images = ?5,
+                website = ?6,
+                author = ?7
+            WHERE recipe_id = ?8", 
+            [recipe_name, cooking_time.to_string(),date_updated.to_string(), instructions, images, website, author, recipe_id.to_string()]).unwrap();
     
     let _ = transaction.execute("
       DELETE 

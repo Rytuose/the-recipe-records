@@ -5,10 +5,19 @@ export class Ingredient{
     measurement: string = "";
 
     toString(portion:number = 1){
-        let str = (this.quantity === -1)? "":parseFloat((this.quantity*portion).toFixed(4));
+        let str = (this.quantity === -1)? "":parseFloat((this.quantity*portion).toFixed(4)).toString();
         if(this.measurement !== ""){
-            str += " " + this.measurement
+            if(str.length != 0){
+                str += " " 
+            }
+            str += this.measurement
         }
-        return str + " " + this.name;
+        if(this.name !== ""){
+            if(str.length != 0){
+                str += " " 
+            }
+            str += this.name
+        }
+        return str;
     }
 }
