@@ -1,4 +1,5 @@
 import { getColorScheme } from "@/constants/color-scheme";
+import { INITIAL_RECIPE_DISPLAY_COUNT } from "@/constants/constants";
 import { getCriteriaCount, RecipeSearchCriteria } from "@/recipe/recipe";
 import { BottomSheet } from '@expo/ui';
 import Feather from "@expo/vector-icons/Feather";
@@ -31,7 +32,7 @@ export default function SearchBar({criteria, setCriteria} : Props){
 
     const searchPress = async () => {
       console.log("Search press " + searchVal);
-      setCriteria({...criteria, name: searchVal});
+      setCriteria({...criteria, name: searchVal, displayAmount: INITIAL_RECIPE_DISPLAY_COUNT});
     }
     
     let criteriaCount = getCriteriaCount(criteria);

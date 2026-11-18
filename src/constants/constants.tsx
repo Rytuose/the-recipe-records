@@ -6,6 +6,12 @@ export const INSTRUCTION_FORM_STARTING_HEIGHT = 34;
 
 export const INGREDIENT_HEIGHT = 35;
 
-export const RECIPE_SUMMARY_WIDTH = 460;
-
 export const IMAGE_HEIGHT = 320
+
+export const INITIAL_RECIPE_DISPLAY_COUNT = 10;
+export const RECIPE_DISPLAY_STEP = 10;
+
+export const RECIPE_SUMMARY_WIDTH = 460;
+export const RECIPE_SUMMARY_HEIGHT = 150;
+export const RECIPE_SUMMARY_BORDER_WIDTH = 4;
+export const RECIPE_SUMMARY_PADDING = 15;

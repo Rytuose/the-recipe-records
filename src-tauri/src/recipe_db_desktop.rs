@@ -30,7 +30,8 @@ pub struct RecipeSearchCriteria{
   starred: bool,
   time: i32,
   time_comparator: String,
-  time_display_unit: String
+  time_display_unit: String,
+  display_amount: i32
 }
 
 #[derive(serde::Deserialize, Serialize)]
@@ -204,11 +205,17 @@ pub fn get_recipes_desktop() -> Vec<RecipeSummaryDetail> {
 
 #[tauri::command]
 pub fn query_recipes_desktop(criteria: RecipeSearchCriteria) -> Vec<RecipeSummaryDetail>{
-  println!("query recipes desktop");
+  println!("query recipes desktop with size {}", criteria.display_amount);
   
-  let mut query = String::from("SELECT R.recipe_id, R.recipe_name, R.cooking_time, R.starred, R.images
+  let mut fetch_query = String::from("SELECT R.recipe_id, R.recipe_name, R.cooking_time, R.starred, R.images
         FROM recipes R
          ");
+
+  let mut count_query = String::from("SELECT COUNT(*)
+        FROM recipes R
+         ");
+
+  let mut query = String::from("");
 
   let mut where_clause = "WHERE ";
   let mut params: Vec<String> = Vec::new();
@@ -232,21 +239,28 @@ pub fn query_recipes_desktop(criteria: RecipeSearchCriteria) -> Vec<RecipeSummar
     where_clause = " AND ";
   }
 
-
-
-  query.push_str("
-   ORDER BY R.date_updated DESC
-        LIMIT 20");
-
-  println!("{}", query);
-  println!("{}", params.join(","));
+  count_query.push_str(&query);
+  fetch_query.push_str(&query);
 
   let db = DB.lock().unwrap();
 
-  let mut query_recipes = (*db).prepare(&query).unwrap();
+  let mut query_count = (*db).prepare(&count_query).unwrap();
+  // let count_result = query_count.query_row(params_from_iter(params.iter()), 
+  // |row| row.get<_:i32>(0)?
+  // )?;
+  let count_result = query_count.query_row(params_from_iter(params.iter()), |row| row.get::<_, i32>(0)).unwrap();
 
+  println!("Found {} matches ", count_result);
 
-  //params_from_iter(params.iter())
+  params.push(criteria.display_amount.to_string());
+  fetch_query.push_str(&(format!("
+   ORDER BY R.date_updated DESC
+        LIMIT ?{}", params.len().to_string())));
+
+  println!("{}", fetch_query);
+  println!("{}", params.join(","));
+
+  let mut query_recipes = (*db).prepare(&fetch_query).unwrap();
 
   let result = query_recipes.query_map(params_from_iter(params.iter()), |row| {
     Ok(RecipeSummaryDetail  { 
@@ -263,6 +277,17 @@ pub fn query_recipes_desktop(criteria: RecipeSearchCriteria) -> Vec<RecipeSummar
     let recipe_summary = summary.unwrap();
     summaries.push(recipe_summary);
   }
+
+  if count_result > criteria.display_amount{
+    println!("Overflow");
+    summaries.push(RecipeSummaryDetail{ 
+      id: -1, 
+      name: "".to_string(), 
+      cooking_time: 0, 
+      starred: false, 
+      images: "[]".to_string() });
+  }
+
 
   //https://docs.rs/rusqlite/latest/rusqlite/struct.ParamsFromIter.html
 

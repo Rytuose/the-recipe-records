@@ -1,6 +1,7 @@
 
 import { getColorScheme } from '@/constants/color-scheme';
-import { RECIPE_SUMMARY_WIDTH } from '@/constants/constants';
+import { RECIPE_SUMMARY_BORDER_WIDTH, RECIPE_SUMMARY_HEIGHT, RECIPE_SUMMARY_PADDING } from '@/constants/constants';
+import { MAIN_STYLE } from '@/constants/styles';
 import { starRecipe } from '@/db/recipe-db';
 import { RecipeSummaryDetail } from '@/recipe/recipe';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
@@ -9,9 +10,7 @@ import { router } from "expo-router";
 import { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
-const RECIPE_SUMMARY_HEIGHT = 150;
-const BORDER_WIDTH = 4;
-const PADDING = 15;
+
 
 type Props = {
     summary:RecipeSummaryDetail;
@@ -44,9 +43,9 @@ export default function RecipeSummary({summary}:Props){
 
     timeString += summary.cooking_time%60 + " mins"
 
-    return <View style={[style.view, {backgroundColor: colorScheme.secondary}]}>
+    return <View style={[MAIN_STYLE.recipeSummaryView, {backgroundColor: colorScheme.secondary}]}>
         <Pressable
-        style={style.button}
+        style={MAIN_STYLE.recipeSummaryButton}
         onPress={recipeClick}>
             <View style={style.horizontalView}>
                 <View style={{flex: 1}}>
@@ -66,18 +65,6 @@ export default function RecipeSummary({summary}:Props){
 }
 
 export const style = StyleSheet.create({
-    view: {
-        width: RECIPE_SUMMARY_WIDTH,
-        height: RECIPE_SUMMARY_HEIGHT,
-        borderWidth: BORDER_WIDTH,
-        borderRadius: 20,
-    },
-    button:{
-        flex: 1,
-        paddingVertical: PADDING,
-        paddingHorizontal: PADDING,
-        justifyContent: 'center'
-    },
     favoriteButton: {
         width: 40, 
         height: 40, 
@@ -97,15 +84,15 @@ export const style = StyleSheet.create({
         gap: 10
     },
     imagePlaceholder:{
-        height: RECIPE_SUMMARY_HEIGHT - BORDER_WIDTH - 2*PADDING,
-        width: RECIPE_SUMMARY_HEIGHT - BORDER_WIDTH - 2*PADDING,
+        height: RECIPE_SUMMARY_HEIGHT - RECIPE_SUMMARY_BORDER_WIDTH - 2*RECIPE_SUMMARY_PADDING,
+        width: RECIPE_SUMMARY_HEIGHT - RECIPE_SUMMARY_BORDER_WIDTH - 2*RECIPE_SUMMARY_PADDING,
         backgroundColor: '#123456',
         borderRadius: 7
 
     },
     image:{
-        height: RECIPE_SUMMARY_HEIGHT - BORDER_WIDTH - 2*PADDING,
-        width: RECIPE_SUMMARY_HEIGHT - BORDER_WIDTH - 2*PADDING,
+        height: RECIPE_SUMMARY_HEIGHT - RECIPE_SUMMARY_BORDER_WIDTH - 2*RECIPE_SUMMARY_PADDING,
+        width: RECIPE_SUMMARY_HEIGHT - RECIPE_SUMMARY_BORDER_WIDTH - 2*RECIPE_SUMMARY_PADDING,
         borderRadius: 7
     }
 
