@@ -41,6 +41,10 @@ export default function DetailScreen() {
   useFocusEffect(
     useCallback(() => {
       const getData = async () => {
+        console.log("Update Start");
+
+        //await new Promise((resolve) => setTimeout(resolve, 5000))
+        
         if(recipeId === undefined || !(typeof(recipeId) === "string")){
           notificationUpdate("Couldn't find recipe", NOTIFICATION_ERROR)
           return
@@ -58,17 +62,34 @@ export default function DetailScreen() {
             key: index
           }
         })
+
+        console.log("Update End");
+        
       }
       getData();
     }, [])
   )
+
+  console.log("Render");
+  
 
   if(recipeId === undefined || !(typeof(recipeId) === "string")){
     return <></>
   }
 
   if(recipe === null){
-    return <Text>Loading Recipe</Text>
+    return <>
+      <Stack.Screen options={{
+        title: "", 
+        headerTitleAlign:'center', 
+        headerTitleStyle: style.title,
+        headerTintColor: colorScheme.onPrimary,
+        headerStyle:{
+          backgroundColor: colorScheme.primary,
+        }
+      }}/> 
+      <Text>Loading Recipe</Text>
+    </>
   }
 
   const onEdit = () => {
@@ -77,7 +98,7 @@ export default function DetailScreen() {
 
     //Stringify recipe?
     //console.log(JSON.stringify(recipe));
-    
+    setRecipe(null);
     router.navigate({pathname: "/(tabs)/search/edit", params:{recipe: JSON.stringify(recipe)}})
   }
 
@@ -205,7 +226,8 @@ export default function DetailScreen() {
 export const style = StyleSheet.create({
   title: {
     fontSize: 27,
-    fontFamily: "Title"
+    fontFamily: "Title",
+    paddingHorizontal:10
   },
   subtitle:{
     fontSize: 32,

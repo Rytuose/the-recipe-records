@@ -3,6 +3,7 @@ import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import { createContext, Dispatch, SetStateAction, useRef, useState } from "react";
 
+
 export const NotificationContext = createContext((text:string, color:string) => {});
 export const RefreshContext = createContext<[number, Dispatch<SetStateAction<number>>]>([0, () => {}]);
 
