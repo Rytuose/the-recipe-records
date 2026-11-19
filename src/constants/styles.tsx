@@ -1,5 +1,6 @@
 import { StyleSheet } from "react-native";
 import { getColorScheme } from "./color-scheme";
+import { RECIPE_SUMMARY_BORDER_WIDTH, RECIPE_SUMMARY_HEIGHT, RECIPE_SUMMARY_PADDING, RECIPE_SUMMARY_WIDTH } from "./constants";
 
 export const MAIN_STYLE = StyleSheet.create({
   title:{
@@ -37,4 +38,16 @@ export const MAIN_STYLE = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center'
   },
+  recipeSummaryView:{
+    width: RECIPE_SUMMARY_WIDTH,
+    height: RECIPE_SUMMARY_HEIGHT,
+    borderWidth: RECIPE_SUMMARY_BORDER_WIDTH,
+    borderRadius: 20,
+  },
+  recipeSummaryButton:{
+    flex: 1,
+    paddingVertical: RECIPE_SUMMARY_PADDING,
+    paddingHorizontal: RECIPE_SUMMARY_PADDING,
+    justifyContent: 'center'
+  }
 });

@@ -4,6 +4,7 @@ import { useFocusEffect } from "expo-router";
 import { useCallback, useRef } from "react";
 import { FlatList, StyleSheet, useWindowDimensions } from "react-native";
 import RecipeSummary from "./recipe-summary";
+import ViewMoreButton from "./view-more-button";
 
 const GAP = 10;
 const MARGIN = 15;
@@ -11,9 +12,10 @@ const MARGIN = 15;
 type Props = {
   recipes: RecipeSummaryDetail[]
   refresh: number
+  viewMore: () => void
 }
 
-export default function RecipeScrollView({recipes, refresh}:Props){
+export default function RecipeScrollView({recipes, refresh, viewMore}:Props){
 
     //const refresh = useContext(RefreshContext)
     const refreshCount = useRef<number>(-1);
@@ -42,7 +44,13 @@ export default function RecipeScrollView({recipes, refresh}:Props){
             columnWrapperStyle = {(columnCount > 1)?style.wrapperStyle:undefined}
             numColumns={columnCount}
             data = {recipes}
-            renderItem={({item}) => {     
+            renderItem={({item}) => {
+                if (item.id < 0){
+                  console.log("Rendering View More");
+                  //return <Text>View More</Text>
+                  return <ViewMoreButton viewMore={viewMore}/>
+                }
+              
                 return <RecipeSummary summary={item}/>
             }}
         />

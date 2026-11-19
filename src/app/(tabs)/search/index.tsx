@@ -2,6 +2,7 @@
 import { RefreshContext } from "@/app/_layout";
 import RecipeScrollView from "@/components/search/recipe-scroll-view";
 import RecipeSearchBar from "@/components/search/recipe-search-bar";
+import { INITIAL_RECIPE_DISPLAY_COUNT, RECIPE_DISPLAY_STEP } from "@/constants/constants";
 import { MAIN_STYLE } from "@/constants/styles";
 import { queryRecipes } from "@/db/recipe-db";
 import { RecipeSearchCriteria, RecipeSummaryDetail } from "@/recipe/recipe";
@@ -10,6 +11,7 @@ import { StyleSheet, Text, View } from "react-native";
 
 export default function SearchScreen() {
   const refreshCount = useRef<number>(0);
+  const scrollBackToTop = useRef<boolean>(true);
   const loading = useRef<boolean>(false);
   const [recipes, setRecipes] = useState<RecipeSummaryDetail[]>([]);
   const [searchCriteria, setSearchCriteria] = useState<RecipeSearchCriteria>(
@@ -18,11 +20,11 @@ export default function SearchScreen() {
       starred: false, 
       time: 0, 
       timeComparator: "", 
-      timeDisplayUnit: "minutes"
+      timeDisplayUnit: "minutes",
+      displayAmount: INITIAL_RECIPE_DISPLAY_COUNT
     }
   );
   const refresh = useContext(RefreshContext)
-  
 
   useEffect(
     useCallback(() => {
@@ -35,7 +37,12 @@ export default function SearchScreen() {
       getData();
       loading.current = false;
 
-      refreshCount.current ++;
+      if (scrollBackToTop.current){
+        refreshCount.current ++;
+      }
+      else{
+        scrollBackToTop.current = true;
+      }
 
       console.log("Updating Recipes");
 
@@ -43,12 +50,16 @@ export default function SearchScreen() {
     }, [searchCriteria])
   ,[searchCriteria, refresh[0]]);
 
+  const viewMore = () => {
+    scrollBackToTop.current = false;
+    setSearchCriteria({...searchCriteria, displayAmount: searchCriteria.displayAmount + RECIPE_DISPLAY_STEP})
+  }
 
   return (
     <View style={[MAIN_STYLE.container,{paddingTop: 10, gap: 10}]}>
       <Text style={style.title}>Search Recipes</Text>
       <RecipeSearchBar criteria={searchCriteria} setCriteria={setSearchCriteria}/>
-      {!loading.current && <RecipeScrollView recipes={recipes} refresh={refreshCount.current}/>}
+      {!loading.current && <RecipeScrollView recipes={recipes} refresh={refreshCount.current} viewMore={viewMore}/>}
     </View>
   );
 }

@@ -144,7 +144,7 @@ export async function queryRecipes(criteria:RecipeSearchCriteria){
             return returnValue;
         }
         catch(e){
-            console.log("Error " + e)
+            console.log("Error querying recipes " + e)
             return []
         }
     }

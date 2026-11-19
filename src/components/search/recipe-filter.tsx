@@ -1,4 +1,5 @@
 import { getColorScheme } from "@/constants/color-scheme";
+import { INITIAL_RECIPE_DISPLAY_COUNT } from "@/constants/constants";
 import { RecipeSearchCriteria } from "@/recipe/recipe";
 import { Text, TextInput, useNativeState } from "@expo/ui";
 import AntDesign from "@expo/vector-icons/AntDesign";
@@ -50,7 +51,8 @@ export default function RecipeFilter({criteria, close, setCriteria}:Props){
             starred: starred === "Starred",
             time: cookingTime,
             timeComparator: (invalid)?"":((cookingTimeComparison === "≤") ? "<=" : (cookingTimeComparison === "≥") ? ">=" : cookingTimeComparison),
-            timeDisplayUnit: (invalid)?"minutes":cookingTimeUnit
+            timeDisplayUnit: (invalid)?"minutes":cookingTimeUnit,
+            displayAmount: INITIAL_RECIPE_DISPLAY_COUNT
         });
         close();
     }

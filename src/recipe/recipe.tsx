@@ -31,6 +31,7 @@ export type RecipeSearchCriteria = {
     time: number;
     timeComparator: string;
     timeDisplayUnit: string;
+    displayAmount:number;
 }
 
 export function printSearchCriteria(criteria:RecipeSearchCriteria){
@@ -38,6 +39,7 @@ export function printSearchCriteria(criteria:RecipeSearchCriteria){
     console.log("\tName: " + ((criteria.name === "")? 'N/A': criteria.name));
     console.log("\tStarred: " + ((criteria.starredValid)?((criteria.starred)?"Starred":"Not Starred"):"N/A"))
     console.log("\tTime: " + ((criteria.timeComparator === "")?'N/A':criteria.timeComparator + " " + criteria.time));
+    console.log("\tDisplay Amount: " + criteria.displayAmount);
 }
 
 export function getCriteriaCount(criteria:RecipeSearchCriteria){
